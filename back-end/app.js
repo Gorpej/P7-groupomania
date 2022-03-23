@@ -18,10 +18,11 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //routes 
-app.use('api/user', userRoutes);
+app.use('/', userRoutes);
 
 
 
