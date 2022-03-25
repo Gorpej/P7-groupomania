@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //routes 
-app.use('/', userRoutes);
+app.use('/api/auth', userRoutes);
 
 
 
