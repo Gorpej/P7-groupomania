@@ -29,7 +29,10 @@ exports.login = (req, res, next) => {
     try {
         const sql = 'SELECT * FROM users WHERE user_email = ?';
         db.query(sql, [req.body.user_email], function (error, results, fields) {
-            if (results[0].user_email === req.body.user_email) { 
+            if(!results[0]){
+                res.status(401).json({ error: 'Email ou mot de passe incorrect' });
+            }
+           else if (results[0].user_email === req.body.user_email) { 
                 bcrypt.compare(req.body.user_password, results[0].user_password)
                     .then(valid => {
                         if (!valid) {
@@ -39,7 +42,6 @@ exports.login = (req, res, next) => {
                         res.status(200).json({ token ,message: 'Utilisateur trouvé' });
                     });
             } else {
-                console.log(req.body)
                 res.status(401).json({ error: 'Email ou mot de passe incorrect' });
             }
         });
