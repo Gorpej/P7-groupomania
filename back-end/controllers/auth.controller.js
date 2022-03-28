@@ -27,19 +27,25 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     try {
-        const sql = 'SELECT * FROM users WHERE user_email = ?';
+        const sql = 'SELECT user_id, user_email, user_password FROM users WHERE user_email = ?';
         db.query(sql, [req.body.user_email], function (error, results, fields) {
-            if(!results[0]){
+            if (!results[0]) {
                 res.status(401).json({ error: 'Email ou mot de passe incorrect' });
             }
-           else if (results[0].user_email === req.body.user_email) { 
+            else if (results[0].user_email === req.body.user_email) {
                 bcrypt.compare(req.body.user_password, results[0].user_password)
                     .then(valid => {
                         if (!valid) {
                             return res.status(401).json({ error: 'Mot de passe incorrect !' });
                         }
-                        let token = jwt.sign({ userId: results[0].user_id }, process.env.TOKEN_SECRET, { expiresIn: '24h' });
-                        res.status(200).json({ token ,message: 'Utilisateur trouvé' });
+                        res.status(200).json({
+                            userId: results[0].user_id,
+                            token: jwt.sign(
+                                { userId: results[0].user_id },
+                                process.env.TOKEN_SECRET,
+                                { expiresIn: '24h' }
+                            )
+                        });
                     });
             } else {
                 res.status(401).json({ error: 'Email ou mot de passe incorrect' });

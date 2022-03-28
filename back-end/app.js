@@ -5,8 +5,10 @@ const path = require('path');
 require('dotenv').config();
 require('./config/db');
 
+const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
-
+const articleRoutes = require('./routes/article.routes');
+const commentRoutes =require('./routes/comment.routes.js');
 
 // créer une application express
 const app = express();
@@ -18,20 +20,14 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //routes 
-app.use('/api/auth', userRoutes);
-
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/article', articleRoutes);
+app.use('/api/comment', commentRoutes);
 
 
 module.exports = app;
-
-
-
-
-
-
-
-
