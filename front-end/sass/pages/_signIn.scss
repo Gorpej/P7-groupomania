@@ -1,0 +1,18 @@
+.section1_signIn {
+    display: flex;
+    justify-content: center;
+    margin-top: -1.5rem;
+    @include phone {
+        margin-top: 6rem;
+    }
+}
+
+.card__title-welcome {
+    text-align: center;
+    color: $color-secondary;
+}
+
+.card__text-welcome {
+    text-align: center;
+    font-size: 1.1em;;
+}

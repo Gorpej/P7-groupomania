@@ -8,7 +8,7 @@ exports.createComment = (req, res, next) => {
             req.body.comment_message
         ]
         const sql = "INSERT INTO comments (comment_userId,comment_articleId, comment_message) VALUES (?)";
-        db.query(sql,[comment], function (error, results) {
+        db.query(sql, [comment], function (error, results) {
             if (!error) {
                 res.status(200).json(results[0]);
                 console.log('commentaire créer');
@@ -24,20 +24,24 @@ exports.createComment = (req, res, next) => {
 
 exports.updateComment = (req, res, next) => {
     try {
-        const comment = [
-            req.body.comment_message,
-            req.params.id
-        ]
-        const sql = "UPDATE comments SET comment_message=? WHERE comment_id=?";
-        db.query(sql, comment, function (error, results) {
-            if (!error) {
-                res.status(200).json(results[0]);
-                console.log('comment modifié');
-            } else {
-                res.status(401).json({ error: 'Erreur dans la modification' });
-                console.log(error)
-            }
-        });
+        if (res.locals.userId === parseInt(req.body.comment_userId)) {   
+            const comment = [
+                req.body.comment_message,
+                req.body.comment_userId,
+                req.params.id
+            ]
+            const sql = "UPDATE comments SET comment_message=?, comment_userId=?  WHERE comment_id=?";
+            db.query(sql, comment, function (error, results) {
+                if (!error) {
+                    res.status(200).json({ message: 'Modification du commentaire effectué' });
+                } else {
+                    res.status(401).json({ error: 'Erreur dans la modification' });
+                    console.log(error)
+                }
+            });
+        } else {
+            res.status(401).json({ error: 'erreur d\'authentification, vous n\'avez pas les droits pour modifier ce commentaire' })
+        }
     } catch (error) {
         res.status(500).json({ error });
     }
