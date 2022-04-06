@@ -1,0 +1,68 @@
+<template>
+  <header>
+    <nav class="navbar navbar-expand-md navbar-light fixed-top">
+      <h1 class="title">
+        <a class="nav-link nav-link-h1" href="./accueil.html">Groupomania</a>
+      </h1>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Team</a>
+          </li>
+          <li class="nav-item navatar">
+            <img
+              src="https://via.placeholder.com/50"
+              alt="Avatar"
+              class="avatar-profil"
+            />
+            <a class="nav-link" href="./profil.html">Profil</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="auth.html"
+              ><i class="bi bi-box-arrow-right"></i
+            ></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+</template>
+
+<script>
+export default {
+  name: "NavbarC",
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.navbar {
+  background-color: #e7e7e7;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.navatar {
+  display: flex;
+  align-items: center;
+}
+
+.avatar-profil {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  align-items: center;
+}
+
+#navbarSupportedContent {
+  display: flex;
+  justify-content: end;
+}
+
+h1 {
+  font-size: 1.5rem;
+  margin-left: 1rem;
+}
+.nav-link-h1 {
+  color: #db4437;
+}
+</style>
