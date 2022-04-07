@@ -11,7 +11,7 @@ const routes = [
         path: '/auth',
         component: AuthC,
         meta: {
-            title: 'S\'identifier'
+            title: 'Connexion/inscription'
         } 
     }, {
         name: 'AccueilC',

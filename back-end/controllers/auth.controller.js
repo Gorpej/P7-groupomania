@@ -15,11 +15,10 @@ exports.signup = (req, res, next) => {
             db.query(sql, [user], function (error, result) {
                 if (error) {
                     res.status(400).json({ message: 'Création de compte échouée' });
-                    throw error
                 } else {
                     res.status(201).json({ message: 'Création de compte confirmée' });
                 }
-            });
+            })
         })
         .catch(error => res.status(500).json({ error }));
 };
