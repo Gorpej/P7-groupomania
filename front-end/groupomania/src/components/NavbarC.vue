@@ -17,10 +17,8 @@
             />
             <a class="nav-link" href="./profil.html">Profil</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="auth.html"
-              ><i class="bi bi-box-arrow-right"></i
-            ></a>
+          <li @click ="logout()" class="nav-item">
+            <i class="bi bi-box-arrow-right"></i>
           </li>
         </ul>
       </div>
@@ -29,8 +27,22 @@
 </template>
 
 <script>
+
+import {mapState} from 'vuex';
+
 export default {
   name: "NavbarC",
+   computed :{
+    ...mapState({
+      user:'userInfos',
+    })
+  },
+  methods: {
+    logout :function(){
+      this.$store.commit('logout');
+      this.$router.push('/auth');
+    }
+  }
 };
 </script>
 
@@ -64,5 +76,12 @@ h1 {
 }
 .nav-link-h1 {
   color: #db4437;
+}
+.navbar-nav{
+  display:flex;
+  align-items: center;
+  justify-content: space-around;
+  width :200px;
+  cursor: pointer;
 }
 </style>

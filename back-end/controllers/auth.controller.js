@@ -3,24 +3,30 @@ const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 
 exports.signup = (req, res, next) => {
-    bcrypt.hash(req.body.user_password, 10)
-        .then(hash => {
-            const user = [
-                [req.body.user_lastName],
-                [req.body.user_firstName],
-                [req.body.user_email],
-                [hash]
-            ];
-            let sql = "INSERT INTO users (user_lastname, user_firstName, user_email, user_password) VALUES (?)";
-            db.query(sql, [user], function (error, result) {
-                if (error) {
-                    res.status(400).json({ message: 'Création de compte échouée' });
-                } else {
-                    res.status(201).json({ message: 'Création de compte confirmée' });
-                }
+    db.query('SELECT user_email FROM users WHERE user_email = ?', [req.body.user_email], function (err, result) {
+        if (result[0] != undefined) {
+            res.status(401).json({ message: 'Votre compte existe déja' });
+        }else{
+            bcrypt.hash(req.body.user_password, 10)
+            .then(hash => {
+                const user = [
+                    [req.body.user_lastName],
+                    [req.body.user_firstName],
+                    [req.body.user_email],
+                    [hash]
+                ];
+                let sql = "INSERT INTO users (user_lastname, user_firstName, user_email, user_password) VALUES (?)";
+                db.query(sql, [user], function (error, result) {
+                    if (error) {
+                        res.status(400).json({ message: 'Création de compte échouée' });
+                    } else {
+                        res.status(201).json({ message: 'Création de compte confirmée' });
+                    }
+                })
             })
-        })
-        .catch(error => res.status(500).json({ error }));
+            .catch(error => res.status(500).json({ error }));
+        }
+    })
 };
 
 

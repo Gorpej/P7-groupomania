@@ -54,6 +54,7 @@ import NavbarC from "@/components/NavbarC.vue";
 
 export default {
   name: "ProfilC",
+  
   components: {
     NavbarC,
   },

@@ -131,13 +131,13 @@ export default {
       this.mode = "login";
     },
      login: function() {
-      //  const self = this;
+       const self = this;
        this.$store.dispatch('login', {
         user_email: this.email,
         user_password: this.password,
       })
       .then(function () {
-        // self.$router.push('/')
+        self.$router.push('/')
       },function (error) {
         console.log(error);
       })
@@ -197,6 +197,10 @@ section,
 }
 
 ::placeholder{
-  font-size:0.9rem;
+  font-size: 0.9rem;
+}
+
+.error-message{
+  color: red;
 }
 </style>

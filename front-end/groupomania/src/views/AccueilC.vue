@@ -7,8 +7,7 @@
         <div class="card-body">
           <div class="mb-3">
             <label for="formPublish" class="form-label form-label_publish"
-              >Message:</label
-            >
+              >Message:</label>
             <textarea
               class="form-control"
               id="publishText"
@@ -85,45 +84,6 @@
           </div>
         </div>
       </div>
-      <!--<div v-for='article in articles' class="card">
-                    <div class="card-header">
-                        <div class="pos-text">
-                            <div class="avatar-name">
-                                <img :src="article.avatar" alt="Avatar" class="avatar-accueil">
-                                <h2 class="text-md-start fs-5 userName">{{article.lastName}} {{article.firstName}}</h2>
-                            </div>
-                            <small class="text-muted">Last updated 3 mins ago</small>
-                        </div>
-                        <div class="card-header__tools">
-                            <div class="card-header__tools__logo_modify"><i class="bi bi-pencil-fill"></i></div>
-                            <div class="card-header__tools__logo_delete"><i class="bi bi-trash-fill"></i></div>
-                        </div>
-                    </div>
-                    <img class="card-img-top" src="./images/background.png" alt="Card image cap">
-                    <div class="card-body">
-                        <p class="card-text">{{article.message}}</p>
-                        <div class="pos-add">
-                            <a href="#">Afficher les commentaires</a>
-                            <button type="button" @click="showMe" class="btn btn-primary logo_add-comment"><i class="bi bi-plus-square-fill"></i></button>
-                        </div>
-                        <div class="container_comment">
-                            <ul class="list-group list-group">
-                                <li class="list-group-item fst-italic list-group-item-action">commentaire</li>
-                                <li class="list-group-item fst-italic list-group-item-action">commentaire</li>
-                            </ul>
-                        </div>
-                    </div>
-                        <div class="card-footer">
-                            <div class="mb-3">
-                                <label for="FormControlComment" class="form-label form-label_comment ">Commentaire:</label>
-                                <div class="position-comment_send">
-                                    <textarea class="form-control form-control_comment" id="commentText"
-                                        rows="1"></textarea>
-                                    <button type="submit" class="btn btn-primary"><i class="bi bi-send-fill"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                </div>-->
     </div>
   </section>
   </div>
@@ -135,17 +95,17 @@ import CommentC from "@/components/CommentC.vue";
 
 export default {
   name: "AccueilC",
+  components: {
+    NavbarC,
+    CommentC,
+  },
+  //moment ou la vue est afficher
   mounted: function(){
-    console.log(this.$store.state.user)
     if (this.$store.state.user.userId == -1) {
       this.$router.push('/auth');
       return;
     } 
     this.$store.dispatch('getUserInfos');
-  },
-  components: {
-    NavbarC,
-    CommentC,
   },
 };
 </script>
