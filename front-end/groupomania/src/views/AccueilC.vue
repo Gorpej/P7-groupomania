@@ -34,7 +34,7 @@
                 alt="Avatar"
                 class="avatar-accueil"
               />
-              <h2 class="text-md-start fs-5 userName">Nom prenom</h2>
+              <h2 class="text-md-start fs-5 userName">nom prenom</h2>
             </div>
             <small class="text-muted">Last updated 3 mins ago</small>
           </div>
@@ -93,13 +93,15 @@
 import NavbarC from "@/components/NavbarC.vue";
 import CommentC from "@/components/CommentC.vue";
 
+// import { mapState } from 'vuex';
+
 export default {
   name: "AccueilC",
   components: {
     NavbarC,
     CommentC,
   },
-  //moment ou la vue est afficher
+  // moment ou la vue est afficher
   mounted: function(){
     if (this.$store.state.user.userId == -1) {
       this.$router.push('/auth');
@@ -107,6 +109,12 @@ export default {
     } 
     this.$store.dispatch('getUserInfos');
   },
+  // computed: {
+  //   ...mapState({
+  //     user: 'userInfos',
+  //   })  
+  // },
+ 
 };
 </script>
 

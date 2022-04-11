@@ -14,7 +14,7 @@ if(!user){
   };
 } else {
   try{
-  user =JSON.parse(user);
+  user = JSON.parse(user);
   instance.defaults.headers.common['Authorization'] = user.token;
   } catch (ex){
     user = {
@@ -40,7 +40,7 @@ const store = createStore({
       state.status = status;
     },
     logUser: function (state, user) {
-      instance.defaults.headers.common['Authorization'] = user.token;
+      instance.defaults.headers.common['Authorization'] = 'bearer ' + user.token;
       localStorage.setItem('user', JSON.stringify(user));
       state.user = user;
     },
@@ -86,7 +86,7 @@ const store = createStore({
       });
     },
     getUserInfos:({ commit }) => {
-      instance.get('/user/1')
+      instance.get('/user/')
           .then(function (response) {
             commit('userInfos', response.data); 
           })

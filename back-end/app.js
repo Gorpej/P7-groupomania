@@ -28,6 +28,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/article', articleRoutes);
 app.use('/api/comment', commentRoutes);
-app.use('/media', express.static(path.join(__dirname, 'media')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 module.exports = app;

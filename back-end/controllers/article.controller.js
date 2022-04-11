@@ -4,9 +4,10 @@ exports.createArticle = (req, res, next) => {
     try {
         const article = [
             res.locals.userId,
-            req.body.article_message,
-        ]
-        const sql = "INSERT INTO articles (article_userId, article_message) VALUES (?)";
+            req.body.article_message
+        ]   
+        // const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+        const sql = `INSERT INTO articles (article_userId, article_message) VALUES (?)`;
         db.query(sql, [article], function (error, results) {
             if (!error) {
                 res.status(200).json(results[0]);
@@ -17,21 +18,10 @@ exports.createArticle = (req, res, next) => {
             }
         });  
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error });
     }
 }
-
-// exports.createThing = (req, res, next) => {
-//     const thingObject = JSON.parse(req.body.thing);
-//     delete thingObject._id;
-//     const thing = new Thing({
-//         ...thingObject,
-//         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-//     });
-//     thing.save()
-//         .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
-//         .catch(error => res.status(400).json({ error }));
-// };
 
 exports.updateArticle = (req, res, next) => {
     try {
