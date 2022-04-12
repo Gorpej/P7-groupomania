@@ -15,71 +15,71 @@
               placeholder="Ecrivez votre message ici"
             ></textarea>
           </div>
-          <button type="button" class="btn btn-outline-primary">
-            Ajouter une photo
-          </button>
-          <input
-            type="submit"
-            class="btn btn-outline-primary"
-            value="Publier"
-          />
+          <div class="input-group mb-3">
+            <button class="btn btn-secondary" type="button" id="btn_publier">Publier</button>
+            <input type="file" class="form-control" id="inputUploadImg" aria-label="Upload">
+          </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="pos-text">
-            <div class="avatar-name">
-              <img
-                src="https://via.placeholder.com/50"
-                alt="Avatar"
-                class="avatar-accueil"
-              />
-              <h2 class="text-md-start fs-5 userName">nom prenom</h2>
+      <div class="card card_articles">
+        <div 
+        v-for="(card_article, dataArticles) in card_articles" :key="dataArticles.article_id"
+        class= "card_article">
+          <div class="card-header">
+            <div class="pos-text">
+              <div class="avatar-name">
+                <img
+                  src="https://via.placeholder.com/50"
+                  alt="Avatar"
+                  class="avatar-accueil"
+                />
+                <h2 class="text-md-start fs-5 userName">{{dataArticles.user_lastName}}</h2>
+              </div>
+              <small class="text-muted">Last updated 3 mins ago</small>
             </div>
-            <small class="text-muted">Last updated 3 mins ago</small>
-          </div>
-          <div class="card-header__tools">
-            <div class="card-header__tools__logo_modify">
-              <i class="bi bi-pencil-fill"></i>
+            <div class="card-header__tools">
+              <div class="card-header__tools__logo_modify">
+                <i class="bi bi-pencil-fill"></i>
+              </div>
+              <div class="card-header__tools__logo_delete">
+                <i class="bi bi-trash-fill"></i>
+              </div>
             </div>
-            <div class="card-header__tools__logo_delete">
-              <i class="bi bi-trash-fill"></i>
-            </div>
           </div>
-        </div>
-        <img
-          class="card-img-top"
-          src="https://via.placeholder.com/200"
-          alt="Card image cap"
-        />
-        <div class="card-body">
-          <p class="card-text">message</p>
-          <div class="pos-add">
-            <a href="#">Afficher les commentaires</a>
-            <button type="button" class="btn logo_add-comment">
-              <i class="bi bi-plus-square-fill"></i>
-            </button>
-          </div>
-          <div class="container_comment">
-            <CommentC />
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="mb-3">
-            <label
-              for="FormControlComment"
-              class="form-label form-label_comment"
-              >Commentaire:</label
-            >
-            <div class="position-comment_send">
-              <textarea
-                class="form-control form-control_comment"
-                id="commentText"
-                rows="1"
-              ></textarea>
-              <button type="submit" class="btn btn-primary">
-                <i class="bi bi-send-fill"></i>
+          <img
+            class="card-img-top"
+            src="https://via.placeholder.com/200"
+            alt="Card image cap"
+          />
+          <div class="card-body">
+            <p class="card-text">message</p>
+            <div class="pos-add">
+              <a href="#">Afficher les commentaires</a>
+              <button type="button" class="btn logo_add-comment">
+                <i class="bi bi-plus-square-fill"></i>
               </button>
+            </div>
+            <div class="container_comment">
+              <CommentC />
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="mb-3">
+              <label
+                for="FormControlComment"
+                class="form-label form-label_comment"
+                >Commentaire:</label
+              >
+              <div class="position-comment_send">
+                <textarea
+                  class="form-control form-control_comment"
+                  id="commentText"
+                  rows="1"
+                ></textarea>
+                <button type="submit" class="btn btn-primary">
+                  <i class="bi bi-send-fill"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -108,17 +108,14 @@ export default {
       return;
     } 
     this.$store.dispatch('getUserInfos');
+    this.$store.dispatch('getAllArticles');
   },
-  // computed: {
-  //   ...mapState({
-  //     user: 'userInfos',
-  //   })  
-  // },
+  
  
 };
 </script>
 
-<style scoped>
+<style scoped >
 section {
   margin-top: 68px;
 }

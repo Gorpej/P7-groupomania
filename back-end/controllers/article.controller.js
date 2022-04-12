@@ -2,21 +2,21 @@ const db = require('../config/db');
 
 exports.createArticle = (req, res, next) => {
     try {
-        const article = [
-            res.locals.userId,
-            req.body.article_message
-        ]   
-        // const imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
-        const sql = `INSERT INTO articles (article_userId, article_message) VALUES (?)`;
+        const article =
+            [
+                res.locals.userId,
+                req.body.article_message,
+                `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            ]
+        const sql = "INSERT INTO articles (article_userId, article_message, article_img) VALUES (?)";
         db.query(sql, [article], function (error, results) {
             if (!error) {
-                res.status(200).json(results[0]);
-                console.log('article créer');
+                res.status(200).json({ message: 'Création d\'article effectué' });   
             } else {
                 res.status(401).json({ error: 'Erreur creation d\'article' });
                 console.log(error)
             }
-        });  
+        });
     } catch (error) {
         console.log(error)
         res.status(500).json({ error });
@@ -56,7 +56,7 @@ exports.deleteArticle = (req, res, next) => {
 }
 
 exports.getAllArticle = (req, res, next) => {
-    const sql = 'SELECT article_id, article_userId, article_message, article_date FROM articles'
+    const sql = 'SELECT user_id user_lastName, user_firstName,user_avatar, article_id, article_message, article_img, article_date, article_modifyDate FROM `users`  JOIN `articles`  ON `users`.`user_id` = `article_userId`'
     db.query(sql, function (error, results) {
         if (!error) {
             res.status(200).json(results);

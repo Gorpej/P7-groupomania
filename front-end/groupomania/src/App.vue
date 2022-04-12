@@ -6,13 +6,11 @@
 <script>
 
 export default {
-  name: 'App',
-  components: {
+   
   }
-}
 </script>
 
-<style>
+<style >
 #app {
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;

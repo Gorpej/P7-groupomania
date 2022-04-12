@@ -2,7 +2,7 @@
   <header>
     <nav class="navbar navbar-expand-md navbar-light fixed-top">
       <h1 class="title">
-        <a class="nav-link nav-link-h1" href="./accueil.html">Groupomania</a>
+        <a class="nav-link nav-link-h1" href="./">Groupomania</a>
       </h1>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
@@ -15,7 +15,7 @@
               alt="Avatar"
               class="avatar-profil"
             />
-            <a class="nav-link" href="./profil.html">Profil</a>
+            <a class="nav-link" href="./profil">Profil</a>
           </li>
           <li @click ="logout()" class="nav-item">
             <i class="bi bi-box-arrow-right"></i>

@@ -1,22 +1,21 @@
 import { createStore } from 'vuex'
-
 const axios = require('axios');
 
 const instance = axios.create({
   baseURL: 'http://localhost:3300/api/'
 });
 
-let user =localStorage.getItem('user');
-if(!user){
+let user = localStorage.getItem('user');
+if (!user) {
   user = {
     userId: -1,
     token: '',
   };
 } else {
-  try{
-  user = JSON.parse(user);
-  instance.defaults.headers.common['Authorization'] = user.token;
-  } catch (ex){
+  try {
+    user = JSON.parse(user);
+    instance.defaults.headers.common['Authorization'] = user.token;
+  } catch (ex) {
     user = {
       userId: -1,
       token: '',
@@ -33,6 +32,7 @@ const store = createStore({
       prenom: '',
       email: '',
     },
+    dataArticles: [],
   },
   // objet qui contient toute les propriétes responsable de modification du state
   mutations: {
@@ -44,7 +44,7 @@ const store = createStore({
       localStorage.setItem('user', JSON.stringify(user));
       state.user = user;
     },
-    userInfos: function (state,userInfos) {
+    userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
     logout: function (state) {
@@ -53,6 +53,10 @@ const store = createStore({
         token: '',
       }
       localStorage.removeItem('user');
+    },
+    getAllArticles (state, dataArticles) {
+      console.log(dataArticles)
+      state.dataArticles = dataArticles;
     }
   },
   actions: {
@@ -76,7 +80,7 @@ const store = createStore({
       return new Promise((resolve, reject) => {
         instance.post('/auth/signup', userInfos)
           .then(function (response) {
-            commit('setStatus', 'created'); 
+            commit('setStatus', 'created');
             resolve(response);
           })
           .catch(function (error) {
@@ -85,15 +89,24 @@ const store = createStore({
           });
       });
     },
-    getUserInfos:({ commit }) => {
-      instance.get('/user/')
-          .then(function (response) {
-            commit('userInfos', response.data); 
-          })
-          .catch(function () {
-          });
-    }
-  },
+      getUserInfos:({ commit }) => {
+        instance.get('/user/')
+            .then(function (response) {
+              commit('userInfos', response.data); 
+            })
+            .catch(function () {
+            });
+      },
+      getAllArticles ({ commit }) {
+        instance.get('article/')
+        .then(response => {
+          commit('getAllArticles',response.data)
+        })
+        .catch(function () {
+        });
+      
+    },
+  }
 })
 
 export default store;
