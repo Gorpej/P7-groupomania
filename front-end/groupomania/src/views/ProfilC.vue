@@ -58,14 +58,19 @@ export default {
   components: {
     NavbarC,
   },
-  // mounted: function(){
-  //   if (this.$store.state.user.userId == -1) {
-  //     this.$router.push('/auth');
-  //     return;
-  //   } 
-  //   this.$store.dispatch('getUserInfos');
-  // },
-
+  mounted: function(){
+    if (this.$store.state.user.userId == -1) {
+      this.$router.push('/auth');
+      return;
+    } 
+    this.$store.dispatch('getUserInfos');
+  },
+  methods: {
+      logout: function () {
+        this.$store.commit('logout');
+        this.$router.push('/auth');
+      },
+  }
 };
 </script>
 

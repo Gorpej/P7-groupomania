@@ -10,7 +10,7 @@ exports.createComment = (req, res, next) => {
         const sql = "INSERT INTO comments (comment_userId,comment_articleId, comment_message) VALUES (?)";
         db.query(sql, [comment], function (error, results) {
             if (!error) {
-                res.status(200).json(results[0]);
+                res.status(200).json({ message: 'commentaire créer' });
                 console.log('commentaire créer');
             } else {
                 res.status(401).json({ error: 'Erreur creation commentaire' });
@@ -59,7 +59,8 @@ exports.deleteComment = (req, res, next) => {
 }
 
 exports.getAllComment = (req, res, next) => {
-    const sql = 'SELECT comment_id, comment_userId, comment_message, comment_date FROM comments'
+   const sql= "SELECT comment_id, comment_userId, comment_message, comment_date FROM comments"
+    // const sql = 'SELECT comment_articleId, article_id, comment_message, comment_userId FROM `comments`  JOIN `articles`  ON `comments`.`comment_articleId` = `article_id`'
     db.query(sql, function (error, results) {
         if (!error) {
             res.status(200).json(results);

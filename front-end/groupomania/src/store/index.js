@@ -14,7 +14,7 @@ if (!user) {
 } else {
   try {
     user = JSON.parse(user);
-    instance.defaults.headers.common['Authorization'] = user.token;
+    instance.defaults.headers.common['Authorization'] = 'bearer ' + user.token;
   } catch (ex) {
     user = {
       userId: -1,
@@ -33,6 +33,11 @@ const store = createStore({
       email: '',
     },
     dataArticles: [],
+    articleInfos: {
+      message: '',
+      image: '',
+    },
+    dataComments: [],
   },
   // objet qui contient toute les propriétes responsable de modification du state
   mutations: {
@@ -54,10 +59,15 @@ const store = createStore({
       }
       localStorage.removeItem('user');
     },
-    getAllArticles (state, dataArticles) {
-      console.log(dataArticles)
+    getAllArticles(state, dataArticles) {
       state.dataArticles = dataArticles;
-    }
+    },
+    articleInfos(state, articleInfos) {
+      state.articleInfos = articleInfos;
+    },
+    getAllComment(state, dataComments) {
+      state.dataComments = dataComments;
+    },
   },
   actions: {
     login: ({ commit }, userInfos) => {
@@ -89,22 +99,41 @@ const store = createStore({
           });
       });
     },
-      getUserInfos:({ commit }) => {
-        instance.get('/user/')
-            .then(function (response) {
-              commit('userInfos', response.data); 
-            })
-            .catch(function () {
-            });
-      },
-      getAllArticles ({ commit }) {
-        instance.get('article/')
-        .then(response => {
-          commit('getAllArticles',response.data)
+    getUserInfos: ({ commit }) => {
+      instance.get('/user')
+        .then(function (response) {
+          commit('userInfos', response.data);
         })
-        .catch(function () {
+        .catch(function (error) {
+          console.log(error)
         });
-      
+    },
+    getAllArticles({ commit }) {
+      instance.get('/article')
+        .then(response => {
+          commit('getAllArticles', response.data)
+        })
+        .catch(function (error) {
+          console.log(error)
+        });
+    },
+    createArticle: ({ commit }, articleInfos) => {
+      instance.post('/article', articleInfos)
+        .then(function () {
+          commit('articleInfos');
+        })
+        .catch(function (error) {
+          console.log(error)
+        });
+    },
+    getAllComment: ({ commit }) => {
+      instance.get('/comment')
+        .then(function (response) {
+          commit('getAllComment', response.data);
+        })
+        .catch(function (error) {
+          console.log(error)
+        });
     },
   }
 })
