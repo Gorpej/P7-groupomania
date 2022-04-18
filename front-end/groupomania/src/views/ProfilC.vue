@@ -1,6 +1,6 @@
 <template>
-     <div>
-         <NavbarC/>
+  <div>
+    <NavbarC />
     <section>
       <div class="card text-center card-form-cont">
         <div class="card-body">
@@ -10,13 +10,13 @@
             class="avatar"
           />
           <div class="input-group mb-3">
-            <!-- v-model='userlastName' -->
             <span class="input-group-text" id="form-lastName">LastName</span>
             <input
               type="text"
               class="form-control"
               placeholder="LastName"
               aria-label="Username"
+              v-model="lastName"
             />
           </div>
           <div class="input-group mb-3">
@@ -24,8 +24,9 @@
             <input
               type="text"
               class="form-control"
-              placeholder="firstName"
+              placeholder="FirstName"
               aria-label="Username"
+              v-model="firstName"
             />
           </div>
 
@@ -34,19 +35,29 @@
               >Mot de passe</span
             >
             <input
+              v-model="password"
               type="text"
               class="form-control"
               placeholder="password"
               aria-label="password"
             />
           </div>
-          <button type="submit" class="btn btn-warning">
-            Sauvegarder les changements
-          </button>
+          <div class="btn-profil">
+            <button type="submit" @click="modifyUser()" class="btn btn-warning">
+              Sauvegarder les changements
+            </button>
+            <button
+              type="submit"
+              class="btn btn-danger"
+              @click="deleteAccount(), logout()"
+            >
+              Supprimer votre compte
+            </button>
+          </div>
         </div>
       </div>
     </section>
-</div>
+  </div>
 </template>
 
 <script>
@@ -54,23 +65,54 @@ import NavbarC from "@/components/NavbarC.vue";
 
 export default {
   name: "ProfilC",
-  
+  lastName: "",
+  firstName: "",
+  password: "",
+
   components: {
     NavbarC,
   },
-  mounted: function(){
+  mounted: function () {
     if (this.$store.state.user.userId == -1) {
-      this.$router.push('/auth');
+      this.$router.push("/auth");
       return;
-    } 
-    this.$store.dispatch('getUserInfos');
+    }
+    this.$store.dispatch("getUserInfos");
   },
   methods: {
-      logout: function () {
-        this.$store.commit('logout');
-        this.$router.push('/auth');
-      },
-  }
+    logout: function () {
+      this.$store.commit("logout");
+      this.$router.push("/auth");
+    },
+    modifyUser: function () {
+      const self = this;
+      this.$store
+        .dispatch("modifyUser", {
+          user_lastName: this.lastName,
+          user_firstName: this.firstName,
+          user_password: this.password,
+        })
+        .then(
+          function (res) {
+            self.$router.push("/");
+            console.log(res);
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
+    },
+    deleteAccount: function () {
+      this.$store.dispatch("deleteAccount").then(
+        function (res) {
+          console.log(res);
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
+    },
+  },
 };
 </script>
 
@@ -93,5 +135,11 @@ export default {
   width: 800px;
   margin-top: 10rem;
   background-color: #94a7ae;
+}
+
+.btn-profil {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
 }
 </style>

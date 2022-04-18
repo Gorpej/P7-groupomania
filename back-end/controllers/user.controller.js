@@ -39,15 +39,15 @@ exports.updateUser = (req, res, next) => {
                     const user = [
                         [req.body.user_lastName],
                         [req.body.user_firstName],
-                        [req.body.user_email],
                         [hash],
                         [req.params.id]
                     ];
-                    const sql = "UPDATE users SET user_lastName=?, user_firstName=?, user_email =?,user_password=? ,user_avatar WHERE user_id=?";
+                    const sql = "UPDATE users SET user_lastName=?, user_firstName=?,user_password=? WHERE user_id=?";
                     db.query(sql, user, function (error, results) {
                         if (!error) {
                             res.status(200).json({ message: 'modification profil executé' });
                         } else {
+                            console.log(error)
                             res.status(401).json({ error: 'Erreur utilisateur table users' });
                         }
                     });

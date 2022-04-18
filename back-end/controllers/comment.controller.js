@@ -57,12 +57,11 @@ exports.deleteComment = (req, res, next) => {
         }
     });
 }
-
-exports.getAllComment = (req, res, next) => {
-   const sql= "SELECT comment_id, comment_userId, comment_message, comment_date FROM comments"
-    // const sql = 'SELECT comment_articleId, article_id, comment_message, comment_userId FROM `comments`  JOIN `articles`  ON `comments`.`comment_articleId` = `article_id`'
-    db.query(sql, function (error, results) {
+exports.getArticleComment = (req, res, next) => {
+    const sql = 'SELECT comment_id, comment_userId, comment_articleId, comment_message, comment_date FROM comments WHERE comment_articleId = ?';
+    db.query(sql, [req.params.id], function (error, results) {
         if (!error) {
+            console.log(results)
             res.status(200).json(results);
         } else {
             res.status(401).json({ error: 'Erreur BDD comments' });

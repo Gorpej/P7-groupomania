@@ -1,33 +1,48 @@
 <template>
-<div>
-         <NavbarC/> 
+  <div>
+    <NavbarC />
   </div>
   <section>
     <div class="card-deck">
       <div class="card card-add">
         <div class="card-body">
           <div class="mb-3">
-            <label for="formPublish" class="form-label form-label_publish">Message:</label>
+            <label for="formPublish" class="form-label form-label_publish"
+              >Message:</label
+            >
             <textarea
               class="form-control"
               id="publishText"
               rows="2"
               placeholder="Ecrivez votre message ici"
               v-model="message"
-              ></textarea>
+            ></textarea>
           </div>
           <div class="input-group mb-3">
-            <button class="btn btn-secondary" 
-            v-on:click="createArticle()"
-            type="button" id="btn_publier">Publier</button>
-            <input type="file" class="form-control" id="inputUploadImg" aria-label="Upload"
-            v-on:change="selectImg">
+            <button
+              class="btn btn-secondary"
+              v-on:click="createArticle()"
+              type="button"
+              id="btn_publier"
+            >
+              Publier
+            </button>
+            <input
+              type="file"
+              class="form-control"
+              id="inputUploadImg"
+              aria-label="Upload"
+              v-on:change="selectImg"
+            />
           </div>
         </div>
       </div>
-      <div class="card articles" v-for="(article,index) in articles" :key="index">
-        <div 
-        class= "card_article">
+      <div
+        class="card articles"
+        v-for="(article, index) in articles"
+        :key="index"
+      >
+        <div class="card_article">
           <div class="card-header">
             <div class="pos-text">
               <div class="avatar-name">
@@ -36,15 +51,29 @@
                   alt="Avatar"
                   class="avatar-accueil"
                 />
-                <h2 class="text-md-start fs-5 userName">{{article.user_firstName}} {{article.user_lastName}}</h2>
+                <h2 class="text-md-start fs-5 userName">
+                  {{ article.user_firstName }} {{ article.user_lastName }}
+                </h2>
               </div>
-              <small class="text-muted">Posté le: {{article.article_modifyDate.slice(0,10).split("-").reverse().join("/")}}</small>
+              <small class="text-muted"
+                >Posté le:
+                {{
+                  article.article_modifyDate
+                    .slice(0, 10)
+                    .split("-")
+                    .reverse()
+                    .join("/")
+                }}</small
+              >
             </div>
             <div class="card-header__tools">
               <div class="card-header__tools__logo_modify">
                 <i class="bi bi-pencil-fill"></i>
               </div>
-              <div class="card-header__tools__logo_delete">
+              <div
+                v-on:click="deleteArticle(article, index)"
+                class="card-header__tools__logo_delete"
+              >
                 <i class="bi bi-trash-fill"></i>
               </div>
             </div>
@@ -55,34 +84,46 @@
             alt="Image de l'article"
           />
           <div class="card-body">
-            <p class="card-text">{{article.article_message}}</p>
+            <p class="card-text">{{ article.article_message }}</p>
             <div class="pos-add">
-              <button 
-              @click ="showComments = !showComments"
-              type="button" class="btn btn-link btn-sm">Afficher les commentaires</button>
+              <button
+                @click="getComments(article)"
+                type="button"
+                class="btn btn-link btn-sm"
+              >
+                Afficher les commentaires
+              </button>
             </div>
-            <div 
-           v-show="showComments"
-            class="container_comment">
-               <ul class="list-group list-group comments">
-                <li class="list-group-item fst-italic list-group-item-action comment" 
-                v-for="comment in comments" :key="comment.articleId">
-                  {{article.user_lastName}} {{article.user_firstName}} : {{comment.comment_message}}
+            <div v-show="article.comments" class="container_comment">
+              <ul class="list-group list-group comments">
+                <li
+                  class="
+                    list-group-item
+                    fst-italic
+                    list-group-item-action
+                    comment
+                  "
+                  v-for="comment in article.comments"
+                  :key="comment.articleId"
+                >
+                  {{ comment.comment_message }}
                 </li>
               </ul>
             </div>
           </div>
-          <div 
-            class="card-footer">
+          <div class="card-footer">
             <div class="mb-3">
               <label
                 for="FormControlComment"
-                class="form-label form-label_comment">Commentaire:</label>
+                class="form-label form-label_comment"
+                >Commentaire:</label
+              >
               <div class="position-comment_send">
                 <textarea
                   class="form-control form-control_comment"
                   id="commentText"
-                  rows="1"></textarea>
+                  rows="1"
+                ></textarea>
                 <button type="submit" class="btn btn-primary">
                   <i class="bi bi-send-fill"></i>
                 </button>
@@ -97,59 +138,65 @@
 
 <script>
 import NavbarC from "@/components/NavbarC.vue";
-// import CommentC from "@/components/CommentC.vue";
 
 export default {
   name: "AccueilC",
   components: {
     NavbarC,
-    // CommentC,
   },
   data: function () {
     return {
       message: null,
       selectedFile: null,
-      showComments:false,
-    }
+      articles: [],
+      comments: [],
+    };
   },
   // moment ou la vue est afficher
-  mounted: function(){
-    
+  mounted: function () {
     if (this.$store.state.user.userId == -1) {
-      this.$router.push('/auth');
+      this.$router.push("/auth");
       return;
-    } 
-    this.$store.dispatch('getUserInfos');
-    this.$store.dispatch('getAllArticles');
-    this.$store.dispatch('getAllComment');
+    } else {
+      this.$store.dispatch("getUserInfos");
+      this.$store
+        .dispatch("getAllArticles")
+        .then((res) => (this.articles = res.data));
+    }
   },
- 
-  computed: {
-    
-    articles () {
-      return this.$store.state.dataArticles
-    },
-    comments () {
-      return this.$store.state.dataComments
-    },
-  },
+
+  computed: {},
   methods: {
-     logout: function () {
-      this.$store.commit('logout');
-      this.$router.push('/auth');
+    logout: function () {
+      this.$store.commit("logout");
+      this.$router.push("/auth");
     },
     selectImg(event) {
       this.selectedFile = event.target.files[0];
     },
-    
-    createArticle(){
+    createArticle() {
       const fd = new FormData();
-      fd.append('article_img', this.selectedFile, this.selectedFile.name);
-      fd.append('article_message',this.message)
-      this.$store.dispatch('createArticle',fd)
-    }
+      fd.append("article_img", this.selectedFile, this.selectedFile.name);
+      fd.append("article_message", this.message);
+      this.$store.dispatch("createArticle", fd);
+    },
+    deleteArticle(article, index) {
+      this.$store.dispatch("deleteArticle", article).then((res) => {
+        if (res.status == 200) {
+          this.articles.splice(index, 1);
+        }
+      });
+    },
+    getComments(comment) {
+      this.$store.dispatch("getComments", comment).then((res) => {
+        if (res.status == 200) {
+          console.log(res.data);
+
+          console.log(comment);
+        }
+      });
+    },
   },
- 
 };
 </script>
 

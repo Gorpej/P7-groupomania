@@ -52,6 +52,9 @@ const store = createStore({
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
+    deleteArticle: function(state,dataArticles ) {
+      state.dataArticles = dataArticles;
+    },
     logout: function (state) {
       state.user = {
         userId: -1,
@@ -65,7 +68,7 @@ const store = createStore({
     articleInfos(state, articleInfos) {
       state.articleInfos = articleInfos;
     },
-    getAllComment(state, dataComments) {
+    getArticleComments(state, dataComments) {
       state.dataComments = dataComments;
     },
   },
@@ -99,6 +102,20 @@ const store = createStore({
           });
       });
     },
+    modifyUser: ({ commit }, userInfos) => {
+      commit('setStatus');
+      return new Promise((resolve, reject) => {
+        instance.put(`/user/${user.userId}`, userInfos)
+          .then(function (response) {
+            commit('setStatus', 'modify');
+            resolve(response);
+          })
+          .catch(function (error) {
+            commit('setStatus', 'error_modify');
+            reject(error);
+          });
+      });
+    },
     getUserInfos: ({ commit }) => {
       instance.get('/user')
         .then(function (response) {
@@ -108,14 +125,21 @@ const store = createStore({
           console.log(error)
         });
     },
-    getAllArticles({ commit }) {
-      instance.get('/article')
-        .then(response => {
-          commit('getAllArticles', response.data)
-        })
-        .catch(function (error) {
-          console.log(error)
-        });
+    deleteAccount: ({ commit }, userInfos) => {
+      return new Promise((resolve, reject) => {
+        instance.delete(`/user/${user.userId}`, userInfos)
+          .then(function (response) {
+            commit('setStatus');
+            resolve(response);
+          })
+          .catch(function (error) {
+            commit('setStatus');
+            reject(error);
+          });
+      });
+    },
+    getAllArticles() {
+      return instance.get('/article')
     },
     createArticle: ({ commit }, articleInfos) => {
       instance.post('/article', articleInfos)
@@ -126,14 +150,17 @@ const store = createStore({
           console.log(error)
         });
     },
-    getAllComment: ({ commit }) => {
-      instance.get('/comment')
-        .then(function (response) {
-          commit('getAllComment', response.data);
-        })
-        .catch(function (error) {
-          console.log(error)
-        });
+    deleteArticle ({commit},dataArticle) {
+      commit;
+      return new Promise(() => {
+        instance.delete(`/article/${dataArticle.article_id}`)
+      })
+    },
+    getComments: ({commit},dataArticle) => {
+      commit('getArticleComments');
+      return new Promise(() => {
+      return instance.get(`/comment/${dataArticle.article_id}`)
+      })
     },
   }
 })
