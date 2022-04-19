@@ -52,7 +52,7 @@ const store = createStore({
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
-    deleteArticle: function(state,dataArticles ) {
+    deleteArticle: function (state, dataArticles) {
       state.dataArticles = dataArticles;
     },
     logout: function (state) {
@@ -150,16 +150,16 @@ const store = createStore({
           console.log(error)
         });
     },
-    deleteArticle ({commit},dataArticle) {
+    deleteArticle({ commit }, dataArticles) {
       commit;
       return new Promise(() => {
-        instance.delete(`/article/${dataArticle.article_id}`)
+        instance.delete(`/article/${dataArticles.article_id}`)
       })
     },
-    getComments: ({commit},dataArticle) => {
-      commit('getArticleComments');
+    getArticleComments: ({ commit }, dataArticles) => {
+      commit('getAllArticles');
       return new Promise(() => {
-      return instance.get(`/comment/${dataArticle.article_id}`)
+        instance.get(`/comment/${dataArticles.article_id}`)
       })
     },
   }

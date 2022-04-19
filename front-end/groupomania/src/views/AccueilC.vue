@@ -21,7 +21,7 @@
           <div class="input-group mb-3">
             <button
               class="btn btn-secondary"
-              v-on:click="createArticle()"
+              v-on:click="createArticle(), reloadPage()"
               type="button"
               id="btn_publier"
             >
@@ -71,7 +71,7 @@
                 <i class="bi bi-pencil-fill"></i>
               </div>
               <div
-                v-on:click="deleteArticle(article, index)"
+                v-on:click="deleteArticle(article, index), reloadPage()"
                 class="card-header__tools__logo_delete"
               >
                 <i class="bi bi-trash-fill"></i>
@@ -87,14 +87,15 @@
             <p class="card-text">{{ article.article_message }}</p>
             <div class="pos-add">
               <button
-                @click="getComments(article)"
+                @click="getArticleComments(article)"
                 type="button"
                 class="btn btn-link btn-sm"
               >
                 Afficher les commentaires
               </button>
             </div>
-            <div v-show="article.comments" class="container_comment">
+            <!-- <div v-show="article.comments" class="container_comment"> -->
+            <div class="container_comment">
               <ul class="list-group list-group comments">
                 <li
                   class="
@@ -103,10 +104,11 @@
                     list-group-item-action
                     comment
                   "
-                  v-for="comment in article.comments"
-                  :key="comment.articleId"
+                  v-for="(comment, indexComment) in comments"
+                  :key="indexComment"
                 >
-                  {{ comment.comment_message }}
+                  {{ article.comment_message }}
+                  <!-- {{ article.comment_message }} -->
                 </li>
               </ul>
             </div>
@@ -159,12 +161,9 @@ export default {
       return;
     } else {
       this.$store.dispatch("getUserInfos");
-      this.$store
-        .dispatch("getAllArticles")
-        .then((res) => (this.articles = res.data));
+      this.$store.dispatch("getAllArticles").then((res) => (this.articles = res.data));
     }
   },
-
   computed: {},
   methods: {
     logout: function () {
@@ -187,14 +186,16 @@ export default {
         }
       });
     },
-    getComments(comment) {
-      this.$store.dispatch("getComments", comment).then((res) => {
-        if (res.status == 200) {
-          console.log(res.data);
-
-          console.log(comment);
-        }
-      });
+    getArticleComments(article) {
+      this.$store
+        .dispatch("getArticleComments", article)
+        .then((res) => {
+          this.comments = res.data;
+          
+        });
+    },
+    reloadPage() {
+      window.location.reload();
     },
   },
 };
