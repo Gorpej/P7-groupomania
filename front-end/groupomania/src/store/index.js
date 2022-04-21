@@ -31,13 +31,14 @@ const store = createStore({
       nom: '',
       prenom: '',
       email: '',
+      image: '',
     },
     dataArticles: [],
+    dataComments: [],
     articleInfos: {
       message: '',
       image: '',
     },
-    dataComments: [],
   },
   // objet qui contient toute les propriétes responsable de modification du state
   mutations: {
@@ -52,9 +53,6 @@ const store = createStore({
     userInfos: function (state, userInfos) {
       state.userInfos = userInfos;
     },
-    deleteArticle: function (state, dataArticles) {
-      state.dataArticles = dataArticles;
-    },
     logout: function (state) {
       state.user = {
         userId: -1,
@@ -62,14 +60,15 @@ const store = createStore({
       }
       localStorage.removeItem('user');
     },
-    getAllArticles(state, dataArticles) {
+    dataArticles(state, dataArticles) {
       state.dataArticles = dataArticles;
     },
     articleInfos(state, articleInfos) {
       state.articleInfos = articleInfos;
     },
-    getArticleComments(state, dataComments) {
-      state.dataComments = dataComments;
+    getComments(state, dataComments) {
+      state.dataArticles.dataComments = dataComments;
+      console.log(dataComments)
     },
   },
   actions: {
@@ -117,7 +116,7 @@ const store = createStore({
       });
     },
     getUserInfos: ({ commit }) => {
-      instance.get('/user')
+      instance.get(`/user/${user.userId}`)
         .then(function (response) {
           commit('userInfos', response.data);
         })
@@ -156,10 +155,26 @@ const store = createStore({
         instance.delete(`/article/${dataArticles.article_id}`)
       })
     },
+    createComment: ({ commit }, dataArticles,comments) => {
+      return new Promise(() => {
+      instance.post(`/comment/${dataArticles.article_id}`,comments)
+        .then(function () {
+          commit('getComments');
+        })
+        .catch(function (error) {
+          console.log(error)
+        });
+      })
+    },
     getArticleComments: ({ commit }, dataArticles) => {
-      commit('getAllArticles');
       return new Promise(() => {
         instance.get(`/comment/${dataArticles.article_id}`)
+          .then(function (res) {
+            commit('getComments', res.data);
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
       })
     },
   }

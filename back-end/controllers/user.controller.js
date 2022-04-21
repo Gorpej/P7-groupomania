@@ -1,9 +1,10 @@
 const db = require('../config/db');
 const bcrypt = require('bcrypt');
+const fs = require('fs');
 
 exports.getAllUser = (req, res, next) => {
     try {
-        const sql = 'SELECT user_id, user_lastName, user_firstName, user_email FROM users'
+        const sql = 'SELECT user_id, user_lastName, user_firstName, user_email,user_avatar FROM users'
         db.query(sql, function (error, results) {
             if (!error) {
                 res.status(200).json(results);
@@ -18,14 +19,18 @@ exports.getAllUser = (req, res, next) => {
 
 exports.infoUser = (req, res, next) => {
     try {
-        const sql = 'SELECT user_id, user_lastName,user_firstName, user_email FROM users WHERE user_id = ?';
-        db.query(sql, [req.params.id], function (error, results) {
-            if (!error) {
-                res.status(200).json(results[0]);
-            } else {
-                res.status(401).json({ error: 'Erreur utilisateur table users' });
-            }
-        });
+        if (res.locals.userId === parseInt(req.params.id)) {
+            const sql = 'SELECT user_id, user_lastName,user_firstName, user_email,user_avatar FROM users WHERE user_id = ?';
+            db.query(sql, [req.params.id], function (error, results) {
+                if (!error) {
+                    res.status(200).json(results[0]);
+                } else {
+                    res.status(401).json({ error: 'Erreur utilisateur table users' });
+                }
+            });
+        } else {
+            res.status(401).json({ error: 'erreur d\'authentification, vous n\'avez pas les droits pour modifier ce profil' })
+        }
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -34,29 +39,28 @@ exports.infoUser = (req, res, next) => {
 exports.updateUser = (req, res, next) => {
     try {
         if (res.locals.userId === parseInt(req.params.id)) {
-            bcrypt.hash(req.body.user_password, 10)
-                .then(hash => {
-                    const user = [
-                        [req.body.user_lastName],
-                        [req.body.user_firstName],
-                        [hash],
-                        [req.params.id]
-                    ];
-                    const sql = "UPDATE users SET user_lastName=?, user_firstName=?,user_password=? WHERE user_id=?";
-                    db.query(sql, user, function (error, results) {
-                        if (!error) {
-                            res.status(200).json({ message: 'modification profil executé' });
-                        } else {
-                            console.log(error)
-                            res.status(401).json({ error: 'Erreur utilisateur table users' });
-                        }
-                    });
-                });
+            const user = [
+                [req.body.user_lastName],
+                [req.body.user_firstName],
+                [`${req.protocol}://${req.get('host')}/images/${req.file.filename}`],
+                [req.params.id]
+            ]
+            const sql = "UPDATE users SET user_lastName=?, user_firstName=?,user_avatar=? WHERE user_id=?";
+            db.query(sql, user, function (error, results) {
+                if (!error) {
+                    res.status(200).json({ message: 'modification profil executé' });
+                } else {
+                    console.log(error)
+                    res.status(401).json({ error: 'Erreur utilisateur table users' });
+                }
+            });
+
         } else {
             res.status(401).json({ error: 'erreur d\'authentification, vous n\'avez pas les droits pour modifier ce profil' })
         }
     } catch (error) {
         res.status(500).json({ error });
+        console.log(error)
     }
 }
 

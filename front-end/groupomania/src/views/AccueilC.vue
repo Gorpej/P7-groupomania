@@ -21,7 +21,7 @@
           <div class="input-group mb-3">
             <button
               class="btn btn-secondary"
-              v-on:click="createArticle(), reloadPage()"
+              v-on:click="createArticle(),reloadPage()"
               type="button"
               id="btn_publier"
             >
@@ -47,7 +47,7 @@
             <div class="pos-text">
               <div class="avatar-name">
                 <img
-                  src="https://via.placeholder.com/50"
+                  :src="article.user_avatar"
                   alt="Avatar"
                   class="avatar-accueil"
                 />
@@ -104,11 +104,8 @@
                     list-group-item-action
                     comment
                   "
-                  v-for="(comment, indexComment) in comments"
-                  :key="indexComment"
                 >
-                  {{ article.comment_message }}
-                  <!-- {{ article.comment_message }} -->
+                  
                 </li>
               </ul>
             </div>
@@ -125,8 +122,14 @@
                   class="form-control form-control_comment"
                   id="commentText"
                   rows="1"
+                  ref="string"
+                  v-model="comment_message"
                 ></textarea>
-                <button type="submit" class="btn btn-primary">
+                <button
+                  type="submit"
+                  @click="createComment(article)"
+                  class="btn btn-primary"
+                >
                   <i class="bi bi-send-fill"></i>
                 </button>
               </div>
@@ -151,7 +154,7 @@ export default {
       message: null,
       selectedFile: null,
       articles: [],
-      comments: [],
+      comments: null,
     };
   },
   // moment ou la vue est afficher
@@ -160,9 +163,11 @@ export default {
       this.$router.push("/auth");
       return;
     } else {
-      this.$store.dispatch("getUserInfos");
-      this.$store.dispatch("getAllArticles").then((res) => (this.articles = res.data));
+      this.$store
+        .dispatch("getAllArticles")
+        .then((res) => (this.articles = res.data));
     }
+    
   },
   computed: {},
   methods: {
@@ -175,7 +180,7 @@ export default {
     },
     createArticle() {
       const fd = new FormData();
-      fd.append("article_img", this.selectedFile, this.selectedFile.name);
+      fd.append("image", this.selectedFile, this.selectedFile.name);
       fd.append("article_message", this.message);
       this.$store.dispatch("createArticle", fd);
     },
@@ -186,13 +191,18 @@ export default {
         }
       });
     },
+    createComment(article) {
+      // const objetComment = {comment_message: this.comment_message}
+      // this.$store.dispatch("createComment",article,objet);
+      this.store.dispatch('createComment',article)
+
+    },
     getArticleComments(article) {
-      this.$store
-        .dispatch("getArticleComments", article)
-        .then((res) => {
-          this.comments = res.data;
-          
-        });
+      this.$store.dispatch("getArticleComments",article)
+      .then((res) => { 
+        article.comments = res.data
+        console.log(res.data);
+      });
     },
     reloadPage() {
       window.location.reload();

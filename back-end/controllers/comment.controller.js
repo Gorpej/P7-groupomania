@@ -4,7 +4,7 @@ exports.createComment = (req, res, next) => {
     try {
         const comment = [
             res.locals.userId,
-            req.body.comment_articleId,
+            req.params.id,
             req.body.comment_message
         ]
         const sql = "INSERT INTO comments (comment_userId,comment_articleId, comment_message) VALUES (?)";

@@ -10,14 +10,9 @@
             <a class="nav-link" href="#">Team</a>
           </li>
           <li class="nav-item navatar">
-            <img
-              src="https://via.placeholder.com/50"
-              alt="Avatar"
-              class="avatar-profil"
-            />
             <a class="nav-link" href="./profil">Profil</a>
           </li>
-          <li @click ="logout()" class="nav-item">
+          <li @click="logout()" class="nav-item">
             <i class="bi bi-box-arrow-right"></i>
           </li>
         </ul>
@@ -27,22 +22,21 @@
 </template>
 
 <script>
-
-import {mapState} from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   name: "NavbarC",
-   computed :{
+  computed: {
     ...mapState({
-      user:'userInfos',
-    })
+      user: "userInfos",
+    }),
   },
   methods: {
-    logout :function(){
-      this.$store.commit('logout');
-      this.$router.push('/auth');
-    }
-  }
+    logout: function () {
+      this.$store.commit("logout");
+      this.$router.push("/auth");
+    },
+  },
 };
 </script>
 
@@ -77,11 +71,11 @@ h1 {
 .nav-link-h1 {
   color: #db4437;
 }
-.navbar-nav{
-  display:flex;
+.navbar-nav {
+  display: flex;
   align-items: center;
   justify-content: space-around;
-  width :200px;
+  width: 200px;
   cursor: pointer;
 }
 </style>

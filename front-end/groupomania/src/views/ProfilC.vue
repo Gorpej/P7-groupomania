@@ -5,45 +5,49 @@
       <div class="card text-center card-form-cont">
         <div class="card-body">
           <img
-            src="https://via.placeholder.com/50"
+            :src="user.user_avatar"
             alt="Avatar"
             class="avatar"
           />
           <div class="input-group mb-3">
-            <span class="input-group-text" id="form-lastName">LastName</span>
+            <span class="input-group-text" id="form-lastName">Nom :</span>
+            <input 
+              type="text"
+              class="form-control"
+              :placeholder="user.user_lastName"
+              aria-label="Username"
+              v-model="lastName"
+              ref="string"
+            />
+            
+          </div>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="form-firstName">Prénom :</span>
             <input
               type="text"
               class="form-control"
-              placeholder="LastName"
+              :placeholder="user.user_firstName"
               aria-label="Username"
-              v-model="lastName"
+              v-model="firstName"
+              ref="string"
             />
           </div>
           <div class="input-group mb-3">
-            <span class="input-group-text" id="form-firstName">FirstName</span>
+            <span class="input-group-text" id="form-firstName">Avatar :</span>
             <input
-              type="text"
+              type="file"
               class="form-control"
-              placeholder="FirstName"
-              aria-label="Username"
-              v-model="firstName"
+              id="inputUploadImg"
+              :placeholder="user.user_avatar"
+              aria-label="Upload"
+              ref="file"
+              v-on:change="selectImg"
             />
           </div>
 
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="form-password"
-              >Mot de passe</span
-            >
-            <input
-              v-model="password"
-              type="text"
-              class="form-control"
-              placeholder="password"
-              aria-label="password"
-            />
-          </div>
           <div class="btn-profil">
-            <button type="submit" @click="modifyUser()" class="btn btn-warning">
+            <button type="submit" @click="modifyUser()" 
+            class="btn btn-warning">
               Sauvegarder les changements
             </button>
             <button
@@ -62,45 +66,51 @@
 
 <script>
 import NavbarC from "@/components/NavbarC.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "ProfilC",
-  lastName: "",
-  firstName: "",
-  password: "",
-
   components: {
     NavbarC,
   },
   mounted: function () {
     if (this.$store.state.user.userId == -1) {
+       console.log(this.$store.state.user)
       this.$router.push("/auth");
       return;
     }
     this.$store.dispatch("getUserInfos");
+   
+  },
+  computed:{
+    ...mapState({
+      user:'userInfos'
+    }),
+
   },
   methods: {
     logout: function () {
       this.$store.commit("logout");
       this.$router.push("/auth");
     },
+    selectImg(event) {
+      this.selectedFile = event.target.files[0];
+    },
     modifyUser: function () {
       const self = this;
-      this.$store
-        .dispatch("modifyUser", {
-          user_lastName: this.lastName,
-          user_firstName: this.firstName,
-          user_password: this.password,
-        })
-        .then(
-          function (res) {
-            self.$router.push("/");
-            console.log(res);
-          },
-          function (error) {
-            console.log(error);
-          }
-        );
+      const fd = new FormData();
+      fd.append("user_lastName", this.lastName);
+      fd.append("user_firstName", this.firstName);
+      fd.append("image", this.selectedFile, this.selectedFile.name);
+      this.$store.dispatch("modifyUser", fd).then(
+        function (res) {
+          self.$router.push("/");
+          console.log(res);
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
     },
     deleteAccount: function () {
       this.$store.dispatch("deleteAccount").then(
