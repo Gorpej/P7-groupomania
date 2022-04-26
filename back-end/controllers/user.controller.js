@@ -39,21 +39,40 @@ exports.infoUser = (req, res, next) => {
 exports.updateUser = (req, res, next) => {
     try {
         if (res.locals.userId === parseInt(req.params.id)) {
-            const user = [
-                [req.body.user_lastName],
-                [req.body.user_firstName],
-                [`${req.protocol}://${req.get('host')}/images/${req.file.filename}`],
-                [req.params.id]
-            ]
-            const sql = "UPDATE users SET user_lastName=?, user_firstName=?,user_avatar=? WHERE user_id=?";
-            db.query(sql, user, function (error, results) {
-                if (!error) {
-                    res.status(200).json({ message: 'modification profil executé' });
-                } else {
-                    console.log(error)
-                    res.status(401).json({ error: 'Erreur utilisateur table users' });
-                }
-            });
+            if(req.file) {
+                const sql = "UPDATE users SET user_lastName=?, user_firstName=?, user_avatar=? WHERE user_id=?";
+                const user = [
+                    req.body.user_lastName,
+                    req.body.user_firstName,
+                    `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                    req.params.id
+                ]
+                db.query(sql, user, function (error, results) {
+                    if (!error) {
+                        res.status(200).json({ message: 'modification profil executé' });
+                    } else {
+                        console.log(error)
+                        res.status(401).json({ error: 'Erreur utilisateur table users' });
+                    }
+    
+                });
+            }else{
+                const user = [
+                    req.body.user_lastName,
+                    req.body.user_firstName,
+                    req.params.id
+                ]
+                const sql = "UPDATE users SET user_lastName=?, user_firstName=? WHERE user_id=?";
+                db.query(sql, user, function (error, results) {
+                    if (!error) {
+                        res.status(200).json({ message: 'modification profil executé' });
+                    } else {
+                        console.log(error)
+                        res.status(401).json({ error: 'Erreur utilisateur table users' });
+                    }
+    
+                });
+            }
 
         } else {
             res.status(401).json({ error: 'erreur d\'authentification, vous n\'avez pas les droits pour modifier ce profil' })

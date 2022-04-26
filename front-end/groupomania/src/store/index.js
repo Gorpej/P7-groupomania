@@ -39,6 +39,7 @@ const store = createStore({
       message: '',
       image: '',
     },
+    comments: [],
   },
   // objet qui contient toute les propriétes responsable de modification du state
   mutations: {
@@ -66,9 +67,8 @@ const store = createStore({
     articleInfos(state, articleInfos) {
       state.articleInfos = articleInfos;
     },
-    getComments(state, dataComments) {
-      state.dataArticles.dataComments = dataComments;
-      console.log(dataComments)
+    comments(state,comments) {
+      state.comments = comments;
     },
   },
   actions: {
@@ -153,28 +153,38 @@ const store = createStore({
       commit;
       return new Promise(() => {
         instance.delete(`/article/${dataArticles.article_id}`)
-      })
-    },
-    createComment: ({ commit }, dataArticles,comments) => {
-      return new Promise(() => {
-      instance.post(`/comment/${dataArticles.article_id}`,comments)
-        .then(function () {
-          commit('getComments');
+        .then(function (res) {
+          console.log(res)
         })
-        .catch(function (error) {
-          console.log(error)
+        .catch(function () {  
         });
       })
     },
+    createComment: ({ commit }, comments) => {
+      commit;
+      instance.post('/comment/',comments)
+      .then(function (response) {
+        commit('setStatus', 'comments');
+        console.log(response)
+      })
+      .catch(function (error) {
+        commit('setStatus', );
+        console.log(error)
+      })
+    },
     getArticleComments: ({ commit }, dataArticles) => {
+      commit;
+      return instance.get(`/comment/${dataArticles.article_id}`)
+    },
+    deleteComment({ commit }, comments) {
+      commit;
       return new Promise(() => {
-        instance.get(`/comment/${dataArticles.article_id}`)
-          .then(function (res) {
-            commit('getComments', res.data);
-          })
-          .catch(function (error) {
-            console.log(error)
-          })
+        instance.delete(`/comment/${comments.comment_id}`)
+        .then(function (res) {
+          console.log(res)
+        })
+        .catch(function () {  
+        });
       })
     },
   }

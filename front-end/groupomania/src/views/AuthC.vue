@@ -210,8 +210,11 @@ export default {
   display: flex;
   justify-content: center;
   font-size: 0.8rem;
+  height:100vh;
 }
-
+.card{
+  margin:auto;
+}
 .card-body {
   padding: 0 1rem;
 }

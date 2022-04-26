@@ -21,7 +21,7 @@
           <div class="input-group mb-3">
             <button
               class="btn btn-secondary"
-              v-on:click="createArticle(),reloadPage()"
+              v-on:click="createArticle()"
               type="button"
               id="btn_publier"
             >
@@ -71,7 +71,7 @@
                 <i class="bi bi-pencil-fill"></i>
               </div>
               <div
-                v-on:click="deleteArticle(article, index), reloadPage()"
+                v-on:click="deleteArticle(article, index)"
                 class="card-header__tools__logo_delete"
               >
                 <i class="bi bi-trash-fill"></i>
@@ -94,8 +94,11 @@
                 Afficher les commentaires
               </button>
             </div>
-            <!-- <div v-show="article.comments" class="container_comment"> -->
-            <div class="container_comment">
+            <div
+              class="container_comment"
+              v-for="(comment, indexC) in article.comments"
+              :key="indexC"
+            >
               <ul class="list-group list-group comments">
                 <li
                   class="
@@ -105,7 +108,13 @@
                     comment
                   "
                 >
-                  
+                  <i class="bi bi-x"
+                  @click="deleteComment(comment)"></i>
+                  <div class="nameComment">
+                    {{ comment.user_lastName }}
+                    {{ comment.user_firstName + ":"}}
+                  </div>
+                  {{ comment.comment_message }}
                 </li>
               </ul>
             </div>
@@ -123,11 +132,11 @@
                   id="commentText"
                   rows="1"
                   ref="string"
-                  v-model="comment_message"
+                  v-model="comment"
                 ></textarea>
                 <button
                   type="submit"
-                  @click="createComment(article)"
+                  @click="createComment(article), reloadPage()"
                   class="btn btn-primary"
                 >
                   <i class="bi bi-send-fill"></i>
@@ -151,10 +160,10 @@ export default {
   },
   data: function () {
     return {
-      message: null,
-      selectedFile: null,
+      message: "",
+      selectedFile: "",
       articles: [],
-      comments: null,
+      comment: "",
     };
   },
   // moment ou la vue est afficher
@@ -167,7 +176,6 @@ export default {
         .dispatch("getAllArticles")
         .then((res) => (this.articles = res.data));
     }
-    
   },
   computed: {},
   methods: {
@@ -192,16 +200,21 @@ export default {
       });
     },
     createComment(article) {
-      // const objetComment = {comment_message: this.comment_message}
-      // this.$store.dispatch("createComment",article,objet);
-      this.store.dispatch('createComment',article)
-
+      this.$store.dispatch("createComment", {
+        comment_articleId: article.article_id,
+        comment_message: this.comment,
+      });
     },
     getArticleComments(article) {
-      this.$store.dispatch("getArticleComments",article)
-      .then((res) => { 
-        article.comments = res.data
-        console.log(res.data);
+      this.$store.dispatch("getArticleComments", article).then((res) => {
+        article.comments = res.data;
+      });
+    },
+    deleteComment(article, indexC){
+      this.$store.dispatch("deleteComment", article).then((res) => {
+        if (res.status == 200) {
+          this.articles.splice(indexC, 1);
+        }
       });
     },
     reloadPage() {
@@ -303,6 +316,27 @@ section {
 }
 
 .list-group-item {
+  display: flex;
+  align-items: center;
   font-size: 0.9rem;
+}
+
+.nameComment {
+  font-weight: bold;
+  font-style: normal !important;
+  text-decoration: underline;
+  margin-left: -20px;
+  margin-right: 10px;
+}
+
+.bi-x {
+  font-size: 1.2rem;
+  transform: translate(428px, 2px);
+  cursor: pointer;
+  color:white;
+}
+.bi-x:hover{
+  transition: 0.3s;
+  color :black;
 }
 </style>

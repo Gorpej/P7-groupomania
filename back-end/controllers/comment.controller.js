@@ -4,7 +4,7 @@ exports.createComment = (req, res, next) => {
     try {
         const comment = [
             res.locals.userId,
-            req.params.id,
+            req.body.comment_articleId,
             req.body.comment_message
         ]
         const sql = "INSERT INTO comments (comment_userId,comment_articleId, comment_message) VALUES (?)";
@@ -48,8 +48,8 @@ exports.updateComment = (req, res, next) => {
 }
 
 exports.deleteComment = (req, res, next) => {
-    const sql = "DELETE FROM comments WHERE comment_id=?;";
-    db.query(sql, [req.params.id], function (error, results) {
+    const sql = "DELETE FROM comments WHERE comment_id=? AND article_userId=? ";
+    db.query(sql, [req.params.id,res.locals.userId], function (error, results) {
         if (!error) {
             res.status(200).json({ message: 'commentaire supprimé' });
         } else {
@@ -58,7 +58,7 @@ exports.deleteComment = (req, res, next) => {
     });
 }
 exports.getArticleComment = (req, res, next) => {
-    const sql = 'SELECT comment_id, comment_userId, comment_articleId, comment_message, comment_date FROM comments WHERE comment_articleId = ?';
+    const sql = 'SELECT comment_id, comment_userId, comment_articleId, comment_message, comment_date, user_firstName,user_lastName,user_avatar FROM comments JOIN users ON comments.comment_userId = users.user_id WHERE comment_articleId = ?';
     db.query(sql, [req.params.id], function (error, results) {
         if (!error) {
             res.status(200).json(results);
