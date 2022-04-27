@@ -152,4 +152,10 @@ export default {
   justify-content: space-around;
   padding: 10px 0;
 }
+
+@media (max-width: 768px) {
+  .card {
+    width:100vw;
+  }
+}
 </style>

@@ -67,9 +67,6 @@
               >
             </div>
             <div class="card-header__tools">
-              <div class="card-header__tools__logo_modify">
-                <i class="bi bi-pencil-fill"></i>
-              </div>
               <div
                 v-on:click="deleteArticle(article, index)"
                 class="card-header__tools__logo_delete"
@@ -80,7 +77,7 @@
           </div>
           <img
             class="card-img-top"
-            :src="article.article_img"
+            v-if="article.article_img" :src="article.article_img"
             alt="Image de l'article"
           />
           <div class="card-body">
@@ -341,5 +338,17 @@ section {
 .bi-x:hover {
   transition: 0.3s;
   color: black;
+}
+@media (max-width: 768px) {
+  section {
+    width: 300px;
+    margin-top:100px;  
+  }
+  .card {
+    width: 100vw;;
+  }
+  .card-deck{
+    width:100vw;
+  }
 }
 </style>

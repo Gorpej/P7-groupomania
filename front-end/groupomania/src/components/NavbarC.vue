@@ -1,16 +1,13 @@
 <template>
   <header>
-    <nav class="navbar navbar-expand-md navbar-light fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-light fixed-top">
       <h1 class="title">
         <a class="nav-link nav-link-h1" href="./">Groupomania</a>
       </h1>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Team</a>
-          </li>
           <li class="nav-item navatar">
-            <a class="nav-link" href="./profil">Profil</a>
+            <a class="nav-link profil" href="./profil">Profil</a>
           </li>
           <li @click="logout()" class="nav-item">
             <i class="bi bi-box-arrow-right"></i>
@@ -64,6 +61,10 @@ export default {
   justify-content: end;
 }
 
+.profil {
+  margin-right: 10px;
+}
+
 h1 {
   font-size: 1.5rem;
   margin-left: 1rem;
@@ -74,8 +75,29 @@ h1 {
 .navbar-nav {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-end;
   width: 200px;
   cursor: pointer;
+  margin-right: 20px;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    width: 100vw;
+    justify-content: center;
+  }
+  .nav-link-h1{
+    margin-left:-20px;
+  }
+  .navbar-collapse{
+    border-top:1px solid #db4437;
+  }
+  .navbar-nav {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  #navbarSupportedContent {
+    justify-content: space-around;
+  }
 }
 </style>

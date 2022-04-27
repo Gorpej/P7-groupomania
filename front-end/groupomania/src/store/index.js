@@ -106,11 +106,11 @@ const store = createStore({
       return new Promise((resolve, reject) => {
         instance.put(`/user/${user.userId}`, userInfos)
           .then(function (response) {
-            commit('setStatus', 'modify');
+            commit('setStatus');
             resolve(response);
           })
           .catch(function (error) {
-            commit('setStatus', 'error_modify');
+            commit('setStatus');
             reject(error);
           });
       });

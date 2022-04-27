@@ -70,9 +70,9 @@
           </div>
           <div
             class="form-row error-message"
-            v-if="mode == 'login' && status == 'error_create'"
+            v-if="mode == 'create' && status == 'error_create'"
           >
-            Adresse mail déja utilisée
+            Adresse mail déja utilisée ou incorrect
           </div>
           <div class="d-grid gap-2 boutons_connexion">
             <button
@@ -138,12 +138,17 @@ export default {
   },
   computed: {
     validatedFields: function () {
+      let emailRegExp = new RegExp(
+        "^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$",
+        "g"
+      );
       if (this.mode == "create") {
         if (
           this.firstName != "" &&
           this.lastName != "" &&
           this.email != "" &&
-          this.password != ""
+          this.password != ""&&
+          emailRegExp.test(this.email)
         ) {
           return true;
         } else {
@@ -157,6 +162,7 @@ export default {
         }
       }
     },
+
     ...mapState(["status"]),
   },
   methods: {
@@ -210,10 +216,10 @@ export default {
   display: flex;
   justify-content: center;
   font-size: 0.8rem;
-  height:100vh;
+  height: 100vh;
 }
-.card{
-  margin:auto;
+.card {
+  margin: auto;
 }
 .card-body {
   padding: 0 1rem;
@@ -249,5 +255,17 @@ section,
 
 .error-message {
   color: red;
+}
+
+@media (max-width: 768px) {
+  .section1 {
+    width: 100%;
+  }
+  .card {
+    height: 75%;
+  }
+  .col-form-label {
+    width: 100%;
+  }
 }
 </style>
