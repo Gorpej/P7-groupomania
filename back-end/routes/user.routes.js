@@ -8,6 +8,6 @@ const auth = require('../middleware/auth');
 router.get('/', auth,userController.getAllUser);
 router.get('/:id',auth, userController.infoUser);
 router.put('/:id',auth, multer,userController.updateUser);
-router.delete('/:id',auth, userController.deleteUser);
+router.delete('/:id',auth,multer, userController.deleteUser);
 
 module.exports = router;

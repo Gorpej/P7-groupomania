@@ -39,7 +39,7 @@ exports.infoUser = (req, res, next) => {
 exports.updateUser = (req, res, next) => {
     try {
         if (res.locals.userId === parseInt(req.params.id)) {
-            if(req.file) {
+            if (req.file) {
                 const sql = "UPDATE users SET user_lastName=?, user_firstName=?, user_avatar=? WHERE user_id=?";
                 const user = [
                     req.body.user_lastName,
@@ -54,9 +54,9 @@ exports.updateUser = (req, res, next) => {
                         console.log(error)
                         res.status(401).json({ error: 'Erreur utilisateur table users' });
                     }
-    
+
                 });
-            }else{
+            } else {
                 const user = [
                     req.body.user_lastName,
                     req.body.user_firstName,
@@ -70,7 +70,7 @@ exports.updateUser = (req, res, next) => {
                         console.log(error)
                         res.status(401).json({ error: 'Erreur utilisateur table users' });
                     }
-    
+
                 });
             }
 
@@ -85,20 +85,31 @@ exports.updateUser = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) => {
     try {
-        if (res.locals.userId === parseInt(req.params.id)) {
-            const sql = "DELETE FROM users WHERE user_id=?;";;
-            db.query(sql, [req.params.id], function (error, results) {
-                if (!error) {
-                    res.status(200).json({ message: 'profil supprimé' });
-                    console.log(results)
-                } else {
-                    res.status(401).json({ error: 'Erreur utilisateur table users' });
-                }
-            });
-        } else {
-            res.status(401).json({ error: 'Erreur utilisateur, vous n\'avez pas les droit de supprimer ce profil' })
-        }
+        const selectImg = "SELECT user_avatar FROM users WHERE user_id=?";
+        const sql = "DELETE FROM users WHERE user_id=?";
+        db.query(selectImg, req.params.id, function (error, result) {
+            if (!error) {
+                const filename = result[0].user_avatar.split('/images/')[1];
+                fs.unlink(`images/${filename}`, () => {
+                    db.query(sql, req.params.id, function (error, results) {
+                        if (res.locals.userId === parseInt(req.params.id)) {
+
+                            db.query(sql, [req.params.id], function (error, results) {
+                                if (!error) {
+                                    res.status(200).json({ message: 'profil supprimé' });
+                                } else {
+                                    res.status(401).json({ error: 'Erreur utilisateur table users' });
+                                }
+                            })
+                        }
+                    })
+                });
+            } else {
+                res.status(401).json({ error: 'Erreur utilisateur, vous n\'avez pas les droit de supprimer ce profil' })
+            }
+        })
     } catch (error) {
         res.status(500).json({ error });
     }
-}
+
+    }

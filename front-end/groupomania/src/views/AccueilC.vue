@@ -108,11 +108,10 @@
                     comment
                   "
                 >
-                  <i class="bi bi-x"
-                  @click="deleteComment(comment)"></i>
+                  <i class="bi bi-x" @click="deleteComment(comment)"></i>
                   <div class="nameComment">
                     {{ comment.user_lastName }}
-                    {{ comment.user_firstName + ":"}}
+                    {{ comment.user_firstName + ":" }}
                   </div>
                   {{ comment.comment_message }}
                 </li>
@@ -188,8 +187,12 @@ export default {
     },
     createArticle() {
       const fd = new FormData();
-      fd.append("image", this.selectedFile, this.selectedFile.name);
-      fd.append("article_message", this.message);
+      if (this.selectedFile) {
+        fd.append("image", this.selectedFile, this.selectedFile.name);
+        fd.append("article_message", this.message);
+      } else {
+        fd.append("article_message", this.message);
+      }
       this.$store.dispatch("createArticle", fd);
     },
     deleteArticle(article, index) {
@@ -210,7 +213,7 @@ export default {
         article.comments = res.data;
       });
     },
-    deleteComment(article, indexC){
+    deleteComment(article, indexC) {
       this.$store.dispatch("deleteComment", article).then((res) => {
         if (res.status == 200) {
           this.articles.splice(indexC, 1);
@@ -333,10 +336,10 @@ section {
   font-size: 1.2rem;
   transform: translate(428px, 2px);
   cursor: pointer;
-  color:white;
+  color: white;
 }
-.bi-x:hover{
+.bi-x:hover {
   transition: 0.3s;
-  color :black;
+  color: black;
 }
 </style>

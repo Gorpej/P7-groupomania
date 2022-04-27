@@ -24,7 +24,7 @@ exports.createComment = (req, res, next) => {
 
 exports.updateComment = (req, res, next) => {
     try {
-        if (res.locals.userId === parseInt(req.body.comment_userId)) {   
+        if (res.locals.userId === parseInt(req.body.comment_userId)) {
             const comment = [
                 req.body.comment_message,
                 req.body.comment_userId,
@@ -48,14 +48,26 @@ exports.updateComment = (req, res, next) => {
 }
 
 exports.deleteComment = (req, res, next) => {
-    const sql = "DELETE FROM comments WHERE comment_id=? AND article_userId=? ";
-    db.query(sql, [req.params.id,res.locals.userId], function (error, results) {
-        if (!error) {
-            res.status(200).json({ message: 'commentaire supprimé' });
-        } else {
-            res.status(401).json({ error: 'Erreur requete suppression de commentaire' });
-        }
-    });
+    if (res.locals.admin === 1) {
+        const sql = "DELETE FROM comments WHERE comment_id=?";
+        db.query(sql, [req.params.id], function (error, results) {
+            if (!error && results.affectedRows === 1) {
+                res.status(200).json({ message: 'commentaire supprimé' });
+            } else {
+                res.status(401).json({ error: 'Erreur requete suppression de commentaire' });
+            }
+        });
+
+    } else {
+        const sql = "DELETE FROM comments WHERE comment_id=? AND comment_userId=?";
+        db.query(sql, [req.params.id, res.locals.userId], function (error, results) {
+            if (!error && results.affectedRows === 1) {
+                res.status(200).json({ message: 'commentaire supprimé' });
+            } else {
+                res.status(401).json({ error: 'Erreur requete suppression de commentaire' });
+            }
+        });
+    }
 }
 exports.getArticleComment = (req, res, next) => {
     const sql = 'SELECT comment_id, comment_userId, comment_articleId, comment_message, comment_date, user_firstName,user_lastName,user_avatar FROM comments JOIN users ON comments.comment_userId = users.user_id WHERE comment_articleId = ?';
