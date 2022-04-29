@@ -31,7 +31,7 @@ exports.signup = (req, res, next) => {
 
 exports.login = (req, res, next) => {
     try {
-        const sql = 'SELECT user_id, user_email, user_password, user_admin FROM users WHERE user_email = ?';
+        const sql = 'SELECT user_id, user_email, user_password, user_admin,user_lastName, user_firstName FROM users WHERE user_email = ?';
         db.query(sql, [req.body.user_email], function (error, results, fields) {
             if (!results[0]) {
                 res.status(401).json({ error: 'Email ou mot de passe incorrect' });
@@ -45,10 +45,14 @@ exports.login = (req, res, next) => {
                         res.status(200).json({
                             userId: results[0].user_id,
                             admin: results[0].user_admin,
+                            firstName: results[0].user_firstName,
+                            lastName: results[0].user_lastName,
                             token: jwt.sign(
                                 {
                                     userId: results[0].user_id,
-                                    admin: results[0].user_admin
+                                    admin: results[0].user_admin,
+                                    firstName: results[0].user_firstName,
+                                    lastName: results[0].user_lastName,
                                 },
                                 process.env.TOKEN_SECRET,
                                 { expiresIn: '24h' }

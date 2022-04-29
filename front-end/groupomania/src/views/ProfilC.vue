@@ -72,10 +72,10 @@ export default {
     NavbarC,
   },
   mounted: function () {
-    this.lastName = this.$store.state.userInfos.user_lastName;
-    this.firstName = this.$store.state.userInfos.user_firstName;
+    this.lastName = this.$store.state.user.lastName;
+    this.firstName = this.$store.state.user.firstName;
     if (this.$store.state.user.userId == -1) {
-      console.log(this.$store.state.user);
+      
       this.$router.push("/auth");
       return;
     }

@@ -21,7 +21,7 @@
           <div class="input-group mb-3">
             <button
               class="btn btn-secondary"
-              v-on:click="createArticle()"
+              v-on:click="createArticle(),reloadPage()"
               type="button"
               id="btn_publier"
             >
@@ -68,7 +68,7 @@
             </div>
             <div class="card-header__tools">
               <div
-                v-on:click="deleteArticle(article, index)"
+                v-on:click="deleteArticle(article, index), reloadPage()"
                 class="card-header__tools__logo_delete"
               >
                 <i class="bi bi-trash-fill"></i>
@@ -105,7 +105,7 @@
                     comment
                   "
                 >
-                  <i class="bi bi-x" @click="deleteComment(comment)"></i>
+                  <i class="bi bi-x" @click="deleteComment(comment), reloadPage()"></i>
                   <div class="nameComment">
                     {{ comment.user_lastName }}
                     {{ comment.user_firstName + ":" }}
