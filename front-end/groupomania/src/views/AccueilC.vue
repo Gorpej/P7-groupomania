@@ -21,7 +21,7 @@
           <div class="input-group mb-3">
             <button
               class="btn btn-secondary"
-              v-on:click="createArticle(),reloadPage()"
+              v-on:click="createArticle(), reloadPage()"
               type="button"
               id="btn_publier"
             >
@@ -190,7 +190,7 @@ export default {
       } else {
         fd.append("article_message", this.message);
       }
-      this.$store.dispatch("createArticle", fd);
+      this.$store.dispatch("createArticle", fd)
     },
     deleteArticle(article, index) {
       this.$store.dispatch("deleteArticle", article).then((res) => {

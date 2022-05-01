@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 const axios = require('axios');
+import createPersistedState from "vuex-persistedstate";
 
 const instance = axios.create({
   baseURL: 'http://localhost:3300/api/'
@@ -41,6 +42,7 @@ const store = createStore({
     },
     comments: [],
   },
+    plugins: [createPersistedState()],
   // objet qui contient toute les propriétes responsable de modification du state
   mutations: {
     setStatus: function (state, status) {
@@ -115,8 +117,8 @@ const store = createStore({
           });
       });
     },
-    getUserInfos: ({ commit }) => {
-      instance.get(`/user/${user.userId}`)
+    getUserInfos: ({ commit },userInfos) => {
+      instance.get(`/user/${user.userId}`,userInfos)
         .then(function (response) {
           commit('userInfos', response.data);
         })
@@ -142,12 +144,12 @@ const store = createStore({
     },
     createArticle: ({ commit }, articleInfos) => {
       instance.post('/article', articleInfos)
-        .then(function () {
-          commit('articleInfos');
-        })
-        .catch(function (error) {
-          console.log(error)
-        });
+      .then(function () {
+        commit('articleInfos');
+      })
+      .catch(function (error) {
+        console.log(error)
+      });
     },
     deleteArticle({ commit }, dataArticles) {
       commit;

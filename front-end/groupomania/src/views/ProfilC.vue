@@ -36,7 +36,6 @@
               v-on:change="selectImg"
             />
           </div>
-
           <div class="btn-profil">
             <button type="submit" @click="modifyUser()" class="btn btn-warning">
               Sauvegarder les changements
@@ -71,11 +70,10 @@ export default {
   components: {
     NavbarC,
   },
-  mounted: function () {
-    this.lastName = this.$store.state.user.lastName;
-    this.firstName = this.$store.state.user.firstName;
-    if (this.$store.state.user.userId == -1) {
-      
+  mounted: function () {    
+    this.lastName = this.$store.state.userInfos.user_lastName;
+    this.firstName = this.$store.state.userInfos.user_firstName;
+    if (this.$store.state.user.userId == -1) {    
       this.$router.push("/auth");
       return;
     }
@@ -83,7 +81,7 @@ export default {
   },
   computed: {
     ...mapState({
-      user: "userInfos",
+      user: "userInfos"
     }),
   },
   methods: {
@@ -155,7 +153,7 @@ export default {
 
 @media (max-width: 768px) {
   .card {
-    width:100vw;
+    width: 100vw;
   }
 }
 </style>

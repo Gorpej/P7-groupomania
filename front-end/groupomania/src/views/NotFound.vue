@@ -1,5 +1,9 @@
 <template>
-    <h1>Cette page n'existe pas</h1>
+<div class="main">
+    <div class="center">
+    <img src="../assets/404-page-error.png" alt="Image 404 page non trouvé">
+    </div>
+    </div>
 </template>
 
 <script>
@@ -8,6 +12,11 @@ name: "NotFound",
 }
 </script>
 
-<style>
+<style scoped>
+    .center{
+        display:flex;
+        justify-content: center;
+        margin-top:50%;
 
+    }
 </style>
