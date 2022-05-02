@@ -133,7 +133,7 @@ export default {
   margin-bottom: 1rem;
 }
 .card {
-  top: 200px;
+  top: 100px;
   margin: auto;
   width: 500px;
   box-shadow: 2px 2px 15px 2px rgba(0, 0, 0, 0.1);
