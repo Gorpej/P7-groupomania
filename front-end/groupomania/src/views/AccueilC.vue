@@ -170,7 +170,9 @@ export default {
     } else {
       this.$store
         .dispatch("getAllArticles")
+        
         .then((res) => (this.articles = res.data));
+        
     }
     this.$store.dispatch("getUserInfos");
   },

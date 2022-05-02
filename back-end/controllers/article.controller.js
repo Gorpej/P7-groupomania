@@ -128,10 +128,11 @@ exports.deleteArticle = (req, res, next) => {
 }
 
 exports.getAllArticle = (req, res, next) => {
-    const sql = 'SELECT user_id, user_lastName, user_firstName,user_avatar, article_id, article_message, article_img, article_date, article_modifyDate FROM `users`  JOIN `articles`  ON `users`.`user_id` = `article_userId`'
+    const sql = 'SELECT user_id, user_lastName, user_firstName,user_avatar, article_id, article_message, article_img, article_date, article_modifyDate FROM `users`  JOIN `articles`  ON `users`.`user_id` = `article_userId` ORDER BY article_id ASC'
     db.query(sql, function (error, results) {
         if (!error) {
             res.status(200).json(results);
+            console.log(results)
         } else {
             res.status(401).json({ error: 'Erreur BDD articles' });
         }
