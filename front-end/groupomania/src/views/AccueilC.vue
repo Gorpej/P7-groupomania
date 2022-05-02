@@ -172,6 +172,7 @@ export default {
         .dispatch("getAllArticles")
         .then((res) => (this.articles = res.data));
     }
+    this.$store.dispatch("getUserInfos");
   },
   computed: {},
   methods: {

@@ -71,13 +71,13 @@ export default {
     NavbarC,
   },
   mounted: function () {    
-    this.lastName = this.$store.state.userInfos.user_lastName;
-    this.firstName = this.$store.state.userInfos.user_firstName;
+    this.lastName = this.user.user_lastName;
+    this.firstName = this.user.user_firstName;   
     if (this.$store.state.user.userId == -1) {    
       this.$router.push("/auth");
       return;
     }
-    this.$store.dispatch("getUserInfos");
+     this.$store.dispatch("getUserInfos"); 
   },
   computed: {
     ...mapState({

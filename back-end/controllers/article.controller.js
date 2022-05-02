@@ -29,7 +29,6 @@ exports.createArticle = (req, res, next) => {
             const sql = "INSERT INTO articles (article_userId, article_message) VALUES (?)";
             db.query(sql, [article], function (error, results) {
                 if (!error) {
-                    console.log(results)
                     res.status(200).json({ message: 'Création d\'article effectué' });
                 } else {
                     res.status(401).json({ error: 'Erreur creation d\'article' });
