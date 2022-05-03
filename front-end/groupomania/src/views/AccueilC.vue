@@ -77,7 +77,8 @@
           </div>
           <img
             class="card-img-top"
-            v-if="article.article_img" :src="article.article_img"
+            v-if="article.article_img"
+            :src="article.article_img"
             alt="Image de l'article"
           />
           <div class="card-body">
@@ -105,7 +106,10 @@
                     comment
                   "
                 >
-                  <i class="bi bi-x" @click="deleteComment(comment), reloadPage()"></i>
+                  <i
+                    class="bi bi-x"
+                    @click="deleteComment(comment), reloadPage()"
+                  ></i>
                   <div class="nameComment">
                     {{ comment.user_lastName }}
                     {{ comment.user_firstName + ":" }}
@@ -170,9 +174,8 @@ export default {
     } else {
       this.$store
         .dispatch("getAllArticles")
-        
+
         .then((res) => (this.articles = res.data));
-        
     }
     this.$store.dispatch("getUserInfos");
   },
@@ -187,13 +190,17 @@ export default {
     },
     createArticle() {
       const fd = new FormData();
-      if (this.selectedFile) {
-        fd.append("image", this.selectedFile, this.selectedFile.name);
-        fd.append("article_message", this.message);
+      if (this.message == "") {
+        alert("votre message est vide");
       } else {
-        fd.append("article_message", this.message);
+        if (this.selectedFile) {
+          fd.append("image", this.selectedFile, this.selectedFile.name);
+          fd.append("article_message", this.message);
+        } else {
+          fd.append("article_message", this.message);
+        }
+        this.$store.dispatch("createArticle", fd);
       }
-      this.$store.dispatch("createArticle", fd)
     },
     deleteArticle(article, index) {
       this.$store.dispatch("deleteArticle", article).then((res) => {
@@ -345,13 +352,13 @@ section {
 @media (max-width: 768px) {
   section {
     width: 300px;
-    margin-top:100px;  
+    margin-top: 100px;
   }
   .card {
-    width: 100vw;;
+    width: 100vw;
   }
-  .card-deck{
-    width:100vw;
+  .card-deck {
+    width: 100vw;
   }
 }
 </style>

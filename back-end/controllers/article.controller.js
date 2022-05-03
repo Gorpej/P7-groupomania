@@ -66,7 +66,6 @@ exports.updateArticle = (req, res, next) => {
 
 exports.deleteArticle = (req, res, next) => {
     try {
-
         if (res.locals.admin === 1) {
             const selectImg = "SELECT article_img FROM articles WHERE article_id=?";
             const sql = "DELETE FROM articles WHERE article_id=?";
@@ -93,10 +92,8 @@ exports.deleteArticle = (req, res, next) => {
                 }
             })
         } else {
-            
             const selectImg = "SELECT article_img FROM articles WHERE article_id=?";
             const sql = "DELETE FROM articles WHERE article_id=? AND article_userId=? ";
-
             db.query(selectImg, req.params.id, function (error, resImg) {
                 if (!error && resImg[0].article_img != null) {
                     db.query(sql, [req.params.id, res.locals.userId], function (error, results) {
@@ -132,7 +129,6 @@ exports.getAllArticle = (req, res, next) => {
     db.query(sql, function (error, results) {
         if (!error) {
             res.status(200).json(results);
-            console.log(results)
         } else {
             res.status(401).json({ error: 'Erreur BDD articles' });
         }
