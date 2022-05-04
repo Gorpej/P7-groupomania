@@ -92,7 +92,10 @@ export default {
     selectImg(event) {
       this.selectedFile = event.target.files[0];
     },
-    modifyUser: function () {
+    modifyUser: function (event) {
+         if (event) {
+      event.preventDefault()
+    }
       const self = this;
       const fd = new FormData();
       fd.append("user_lastName", this.lastName);

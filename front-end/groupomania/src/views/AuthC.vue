@@ -17,7 +17,7 @@
                 v-model="lastName"
                 type="text"
                 class="form-control"
-                id="FormControlLastName"
+                id="inputLastName"
                 placeholder="nom"
                 required
               />
@@ -30,7 +30,7 @@
                 v-model="firstName"
                 type="text"
                 class="form-control"
-                id="FormControlFirstName"
+                id="inputFirstName"
                 placeholder="prenom"
                 required
               />
@@ -44,7 +44,7 @@
               v-model="email"
               type="email"
               class="form-control"
-              id="FormControlEmail"
+              id="inputEmail"
               placeholder="name@example.com"
               required
             />
@@ -57,7 +57,7 @@
               v-model="password"
               type="password"
               class="form-control"
-              id="FormControlPassword"
+              id="inputPassword"
               required
               autocomplete="on"
             />
@@ -241,7 +241,7 @@ section,
 }
 
 .card__action {
-  color: #2196f3;
+  color: #07599C;
   text-decoration: underline;
 }
 .card__action:hover {

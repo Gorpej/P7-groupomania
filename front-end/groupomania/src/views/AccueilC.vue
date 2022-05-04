@@ -14,6 +14,7 @@
               class="form-control"
               id="publishText"
               rows="2"
+               aria-label="textmessage"
               placeholder="Ecrivez votre message ici"
               v-model="message"
             ></textarea>
@@ -130,12 +131,14 @@
                 <textarea
                   class="form-control form-control_comment"
                   id="commentText"
+                  aria-label="textArea"
                   rows="1"
                   ref="string"
                   v-model="comment"
                 ></textarea>
                 <button
                   type="submit"
+                   aria-label="boutoncomment"
                   @click="createComment(article), reloadPage()"
                   class="btn btn-primary"
                 >
@@ -179,7 +182,6 @@ export default {
     }
     this.$store.dispatch("getUserInfos");
   },
-  computed: {},
   methods: {
     logout: function () {
       this.$store.commit("logout");
@@ -188,7 +190,10 @@ export default {
     selectImg(event) {
       this.selectedFile = event.target.files[0];
     },
-    createArticle() {
+    createArticle(event) {
+       if (event) {
+      event.preventDefault()
+    }
       const fd = new FormData();
       if (this.message == "") {
         alert("votre message est vide");
@@ -209,7 +214,10 @@ export default {
         }
       });
     },
-    createComment(article) {
+    createComment(article,event) { 
+         if (event) {
+      event.preventDefault()
+    }
       this.$store.dispatch("createComment", {
         comment_articleId: article.article_id,
         comment_message: this.comment,
