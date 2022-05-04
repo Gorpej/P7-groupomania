@@ -22,7 +22,7 @@
           <div class="input-group mb-3">
             <button
               class="btn btn-secondary"
-              v-on:click="createArticle(),$event, reloadPage()"
+              v-on:click="createArticle(), reloadPage()"
               type="button"
               id="btn_publier"
             >
@@ -139,7 +139,7 @@
                 <button
                   type="submit"
                    aria-label="boutoncomment"
-                  @click="createComment(article),$event,reloadPage()"
+                  @click="createComment(article),reloadPage()"
                   class="btn btn-primary"
                 >
                   <i class="bi bi-send-fill"></i>
