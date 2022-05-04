@@ -190,7 +190,7 @@ export default {
     selectImg(event) {
       this.selectedFile = event.target.files[0];
     },
-    createArticle(event) {
+    createArticle() {
       event.preventDefault()
       const fd = new FormData();
       if (this.message == "") {
@@ -212,7 +212,7 @@ export default {
         }
       });
     },
-    createComment(article,event) { 
+    createComment(article) { 
         event.preventDefault()
       this.$store.dispatch("createComment", {
         comment_articleId: article.article_id,
