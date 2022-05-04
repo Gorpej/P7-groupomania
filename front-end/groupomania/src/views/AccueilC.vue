@@ -191,9 +191,7 @@ export default {
       this.selectedFile = event.target.files[0];
     },
     createArticle(event) {
-       if (event) {
       event.preventDefault()
-    }
       const fd = new FormData();
       if (this.message == "") {
         alert("votre message est vide");
@@ -215,9 +213,7 @@ export default {
       });
     },
     createComment(article,event) { 
-         if (event) {
-      event.preventDefault()
-    }
+        event.preventDefault()
       this.$store.dispatch("createComment", {
         comment_articleId: article.article_id,
         comment_message: this.comment,
