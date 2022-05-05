@@ -14,7 +14,7 @@
               class="form-control"
               id="publishText"
               rows="2"
-               aria-label="textmessage"
+              aria-label="textmessage"
               placeholder="Ecrivez votre message ici"
               v-model="message"
             ></textarea>
@@ -22,7 +22,7 @@
           <div class="input-group mb-3">
             <button
               class="btn btn-secondary"
-              v-on:click="createArticle(), reloadPage()"
+              v-on:click="createArticle()"
               type="button"
               id="btn_publier"
             >
@@ -60,7 +60,7 @@
                 >Posté le:
                 {{
                   article.article_modifyDate
-                    .slice(0, 10)
+                  .slice(0, 10)
                     .split("-")
                     .reverse()
                     .join("/")
@@ -69,7 +69,7 @@
             </div>
             <div class="card-header__tools">
               <div
-                v-on:click="deleteArticle(article, index), reloadPage()"
+                v-on:click="deleteArticle(article, index)"
                 class="card-header__tools__logo_delete"
               >
                 <i class="bi bi-trash-fill"></i>
@@ -107,10 +107,7 @@
                     comment
                   "
                 >
-                  <i
-                    class="bi bi-x"
-                    @click="deleteComment(comment), reloadPage()"
-                  ></i>
+                  <i class="bi bi-x" @click="deleteComment(article,comment,indexC)"></i>
                   <div class="nameComment">
                     {{ comment.user_lastName }}
                     {{ comment.user_firstName + ":" }}
@@ -138,8 +135,8 @@
                 ></textarea>
                 <button
                   type="submit"
-                   aria-label="boutoncomment"
-                  @click="createComment(article),reloadPage()"
+                  aria-label="boutoncomment"
+                  @click="createComment(article)"
                   class="btn btn-primary"
                 >
                   <i class="bi bi-send-fill"></i>
@@ -177,7 +174,6 @@ export default {
     } else {
       this.$store
         .dispatch("getAllArticles")
-
         .then((res) => (this.articles = res.data));
     }
     this.$store.dispatch("getUserInfos");
@@ -191,7 +187,7 @@ export default {
       this.selectedFile = event.target.files[0];
     },
     createArticle() {
-      event.preventDefault()
+      // event.preventDefault()
       const fd = new FormData();
       if (this.message == "") {
         alert("votre message est vide");
@@ -202,7 +198,11 @@ export default {
         } else {
           fd.append("article_message", this.message);
         }
-        this.$store.dispatch("createArticle", fd);
+        this.$store.dispatch("createArticle", fd)
+        .then((res) => {
+          this.articles.unshift(res.data[0])
+          
+          });
       }
     },
     deleteArticle(article, index) {
@@ -212,27 +212,28 @@ export default {
         }
       });
     },
-    createComment(article) { 
-        event.preventDefault()
+    createComment(article) {
+      // event.preventDefault()
       this.$store.dispatch("createComment", {
         comment_articleId: article.article_id,
         comment_message: this.comment,
+      })
+       .then((res) => {
+          article.comments.push(res.data[0])
+          });
+    },
+    deleteComment(article,comment, indexC) {
+      this.$store.dispatch("deleteComment", comment).then((res) => {
+        if (res.status == 200) {
+           console.log(res)
+          article.comments.splice(indexC, 1);
+        }
       });
     },
     getArticleComments(article) {
       this.$store.dispatch("getArticleComments", article).then((res) => {
         article.comments = res.data;
       });
-    },
-    deleteComment(article, indexC) {
-      this.$store.dispatch("deleteComment", article).then((res) => {
-        if (res.status == 200) {
-          this.articles.splice(indexC, 1);
-        }
-      });
-    },
-    reloadPage() {
-      window.location.reload();
     },
   },
 };

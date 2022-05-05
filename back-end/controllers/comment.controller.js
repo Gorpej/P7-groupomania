@@ -10,8 +10,14 @@ exports.createComment = (req, res, next) => {
         const sql = "INSERT INTO comments (comment_userId,comment_articleId, comment_message) VALUES (?)";
         db.query(sql, [comment], function (error, results) {
             if (!error) {
-                res.status(200).json({ message: 'commentaire créer' });
-                console.log('commentaire créer');
+                const sql = 'SELECT comment_id, comment_userId, comment_articleId, comment_message, comment_date, user_firstName,user_lastName,user_avatar FROM comments JOIN users ON comments.comment_userId = users.user_id WHERE comment_id = ?';
+                db.query(sql, [results.insertId], function (error, results) {
+                    if (!error) {
+                        res.status(200).json(results);
+                    } else {
+                        res.status(401).json({ error: 'Erreur BDD comments' });
+                    }
+                })
             } else {
                 res.status(401).json({ error: 'Erreur creation commentaire' });
                 console.log(error)
@@ -52,7 +58,7 @@ exports.deleteComment = (req, res, next) => {
         const sql = "DELETE FROM comments WHERE comment_id=?";
         db.query(sql, [req.params.id], function (error, results) {
             if (!error && results.affectedRows === 1) {
-                res.status(200).json({ message: 'commentaire supprimé' });
+                res.status(200).json(results);
             } else {
                 res.status(401).json({ error: 'Erreur requete suppression de commentaire' });
             }
@@ -62,7 +68,7 @@ exports.deleteComment = (req, res, next) => {
         const sql = "DELETE FROM comments WHERE comment_id=? AND comment_userId=?";
         db.query(sql, [req.params.id, res.locals.userId], function (error, results) {
             if (!error && results.affectedRows === 1) {
-                res.status(200).json({ message: 'commentaire supprimé' });
+                res.status(200).json(results);
             } else {
                 res.status(401).json({ error: 'Erreur requete suppression de commentaire' });
             }

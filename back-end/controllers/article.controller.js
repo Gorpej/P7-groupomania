@@ -13,7 +13,14 @@ exports.createArticle = (req, res, next) => {
             const sql = "INSERT INTO articles (article_userId, article_message, article_img) VALUES (?)";
             db.query(sql, [article], function (error, results) {
                 if (!error) {
-                    res.status(200).json(results);
+                    const sql = 'SELECT user_id, user_lastName, user_firstName,user_avatar, article_id, article_message, article_img, article_date, article_modifyDate FROM `users`  JOIN `articles`  ON `users`.`user_id` = `article_userId` WHERE article_id=?'
+                    db.query(sql,results.insertId, function (error, results) {
+                        if (!error) {
+                            res.status(200).json(results);
+                        } else {
+                            res.status(401).json({ error: 'Erreur BDD articles' });
+                        }
+                    });
                 } else {
                     res.status(401).json({ error: 'Erreur creation d\'article' });
                     console.log(error)
@@ -29,14 +36,20 @@ exports.createArticle = (req, res, next) => {
             const sql = "INSERT INTO articles (article_userId, article_message) VALUES (?)";
             db.query(sql, [article], function (error, results) {
                 if (!error) {
-                    res.status(200).json({ message: 'Création d\'article effectué' });
+                    const sql = 'SELECT user_id, user_lastName, user_firstName,user_avatar, article_id, article_message, article_date, article_modifyDate FROM `users`  JOIN `articles`  ON `users`.`user_id` = `article_userId` WHERE article_id=?'
+                    db.query(sql,results.insertId, function (error, results) {
+                        if (!error) {
+                            res.status(200).json(results);
+                        } else {
+                            res.status(401).json({ error: 'Erreur BDD articles' });
+                        }
+                    });
                 } else {
                     res.status(401).json({ error: 'Erreur creation d\'article' });
                     console.log(error)
                 }
             });
         }
-
     } catch (error) {
         console.log(error)
         res.status(500).json({ error });
@@ -75,7 +88,7 @@ exports.deleteArticle = (req, res, next) => {
                         if (!error && results.affectedRows === 1) {
                             const filename = resImg[0].article_img.split('/images/')[1];
                             fs.unlink(`images/${filename}`, () => {
-                                res.status(200).json({ message: 'article supprimé' });
+                                res.status(200).json(results);
                             });
                         } else {
                             res.status(401).json({ error: 'Erreur requete suppression d\'article' });
@@ -84,7 +97,7 @@ exports.deleteArticle = (req, res, next) => {
                 } else {
                     db.query(sql, [req.params.id, res.locals.userId], function (error, results) {
                         if (!error && results.affectedRows === 1) {
-                                res.status(200).json({ message: 'article supprimé' });
+                            res.status(200).json(results);
                         } else {
                             res.status(401).json({ error: 'Erreur requete suppression d\'article' });
                         }
@@ -100,7 +113,7 @@ exports.deleteArticle = (req, res, next) => {
                         if (!error && results.affectedRows === 1) {
                             const filename = resImg[0].article_img.split('/images/')[1];
                             fs.unlink(`images/${filename}`, () => {
-                                res.status(200).json({ message: 'article supprimé' });
+                                res.status(200).json(results);
                             });
                         } else {
                             res.status(401).json({ error: 'Erreur requete suppression d\'article' });
@@ -109,8 +122,7 @@ exports.deleteArticle = (req, res, next) => {
                 } else {
                     db.query(sql, [req.params.id, res.locals.userId], function (error, results) {
                         if (!error && results.affectedRows === 1) {
-                            
-                                res.status(200).json({ message: 'article supprimé' });
+                            res.status(200).json(results);
                         } else {
                             res.status(401).json({ error: 'Erreur requete suppression d\'article' });
                         }
@@ -125,7 +137,7 @@ exports.deleteArticle = (req, res, next) => {
 }
 
 exports.getAllArticle = (req, res, next) => {
-    const sql = 'SELECT user_id, user_lastName, user_firstName,user_avatar, article_id, article_message, article_img, article_date, article_modifyDate FROM `users`  JOIN `articles`  ON `users`.`user_id` = `article_userId` ORDER BY article_id ASC'
+    const sql = 'SELECT user_id, user_lastName, user_firstName,user_avatar, article_id, article_message, article_img, article_date, article_modifyDate FROM `users`  JOIN `articles`  ON `users`.`user_id` = `article_userId` ORDER BY article_id DESC'
     db.query(sql, function (error, results) {
         if (!error) {
             res.status(200).json(results);
