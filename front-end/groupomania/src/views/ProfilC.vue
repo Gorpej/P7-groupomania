@@ -70,18 +70,18 @@ export default {
   components: {
     NavbarC,
   },
-  mounted: function () {    
+  mounted: function () {
     this.lastName = this.user.user_lastName;
-    this.firstName = this.user.user_firstName;   
-    if (this.$store.state.user.userId == -1) {    
+    this.firstName = this.user.user_firstName; 
+    if (this.$store.state.user.userId == -1) {
       this.$router.push("/auth");
       return;
     }
-     this.$store.dispatch("getUserInfos"); 
+    this.$store.dispatch("getUserInfos");
   },
   computed: {
     ...mapState({
-      user: "userInfos"
+      user: "userInfos",
     }),
   },
   methods: {
@@ -93,9 +93,9 @@ export default {
       this.selectedFile = event.target.files[0];
     },
     modifyUser: function (event) {
-         if (event) {
-      event.preventDefault()
-    }
+      if (event) {
+        event.preventDefault();
+      }
       const self = this;
       const fd = new FormData();
       fd.append("user_lastName", this.lastName);

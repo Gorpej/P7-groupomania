@@ -20,9 +20,10 @@ exports.getAllUser = (req, res, next) => {
 exports.infoUser = (req, res, next) => {
     try {
         if (res.locals.userId === parseInt(req.params.id)) {
-            const sql = 'SELECT user_id, user_lastName,user_firstName, user_email,user_avatar FROM users WHERE user_id = ?';
+            const sql = 'SELECT user_id, user_lastName, user_firstName, user_email, user_avatar FROM users WHERE user_id = ?';
             db.query(sql, [req.params.id], function (error, results) {
                 if (!error) {
+                    console.log(results)
                     res.status(200).json(results[0]);
                 } else {
                     res.status(401).json({ error: 'Erreur utilisateur table users' });

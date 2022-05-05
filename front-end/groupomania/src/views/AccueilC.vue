@@ -60,7 +60,7 @@
                 >Posté le:
                 {{
                   article.article_modifyDate
-                  .slice(0, 10)
+                    .slice(0, 10)
                     .split("-")
                     .reverse()
                     .join("/")
@@ -107,7 +107,10 @@
                     comment
                   "
                 >
-                  <i class="bi bi-x" @click="deleteComment(article,comment,indexC)"></i>
+                  <i
+                    class="bi bi-x"
+                    @click="deleteComment(article, comment, indexC)"
+                  ></i>
                   <div class="nameComment">
                     {{ comment.user_lastName }}
                     {{ comment.user_firstName + ":" }}
@@ -176,7 +179,6 @@ export default {
         .dispatch("getAllArticles")
         .then((res) => (this.articles = res.data));
     }
-    this.$store.dispatch("getUserInfos");
   },
   methods: {
     logout: function () {
@@ -187,7 +189,6 @@ export default {
       this.selectedFile = event.target.files[0];
     },
     createArticle() {
-      // event.preventDefault()
       const fd = new FormData();
       if (this.message == "") {
         alert("votre message est vide");
@@ -201,8 +202,10 @@ export default {
         this.$store.dispatch("createArticle", fd)
         .then((res) => {
           this.articles.unshift(res.data[0])
-          
-          });
+          })
+        .catch((error) => {
+          console.error(error)
+        })
       }
     },
     deleteArticle(article, index) {
@@ -213,14 +216,18 @@ export default {
       });
     },
     createComment(article) {
-      // event.preventDefault()
       this.$store.dispatch("createComment", {
         comment_articleId: article.article_id,
         comment_message: this.comment,
       })
-       .then((res) => {
-          article.comments.push(res.data[0])
-          });
+       .then((res,) => {
+         if (Array.isArray(article.comments)) {
+          article.comments.push(res.data[0]);
+         }
+          })
+         .catch((error) => {
+          console.error(error)
+        })
     },
     deleteComment(article,comment, indexC) {
       this.$store.dispatch("deleteComment", comment).then((res) => {

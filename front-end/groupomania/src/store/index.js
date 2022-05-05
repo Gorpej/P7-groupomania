@@ -29,8 +29,8 @@ const store = createStore({
     status: '',
     user: user,
     userInfos: {
-      nom: '',
-      prenom: '',
+      lastName: '',
+      firstName: '',
       email: '',
       image: '',
     },
@@ -145,64 +145,21 @@ const store = createStore({
     createArticle: ({ commit }, articleInfos) => {
       commit;
      return instance.post('/article', articleInfos)
-    },
-    // createArticle: ({ commit }, articleInfos) => {
-    //   instance.post('/article', articleInfos)
-    //   .then(function () {
-    //     commit('articleInfos');
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error)
-    //   });
-    // },
+    },  
     deleteArticle({ commit }, dataArticles) {
       commit;
        return instance.delete(`/article/${dataArticles.article_id}`)
        
     },
-    // deleteArticle({ commit }, dataArticles) {
-    //   commit;
-    //   return new Promise(() => {
-    //     instance.delete(`/article/${dataArticles.article_id}`)
-    //     .then(function (res) {
-    //       console.log(res)
-    //     })
-    //     .catch(function () {  
-    //     });
-    //   })
-    // },
     createComment: ({ commit }, comments) => {
       commit;
      return instance.post('/comment/',comments)
      
     },
-    // createComment: ({ commit }, comments) => {
-    //   commit;
-    //   instance.post('/comment/',comments)
-    //   .then(function (response) {
-    //     commit('setStatus', 'comments');
-    //     console.log(response)
-    //   })
-    //   .catch(function (error) {
-    //     commit('setStatus', );
-    //     console.log(error)
-    //   })
-    // },
     deleteComment({ commit }, comments) {
       commit;
       return instance.delete(`/comment/${comments.comment_id}`)
     },
-    // deleteComment({ commit }, comments) {
-    //   commit;
-    //   return new Promise(() => {
-    //     instance.delete(`/comment/${comments.comment_id}`)
-    //     .then(function (res) {
-    //       console.log(res)
-    //     })
-    //     .catch(function () {  
-    //     });
-    //   })
-    // },
     getArticleComments: ({ commit }, dataArticles) => {
       commit;
       return instance.get(`/comment/${dataArticles.article_id}`)
